@@ -1,0 +1,19 @@
+.footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--bk-light);
+	padding: 10px 0px;
+}
+/* .footer-links {
+	border: solid;
+} */
+.footer-links a {
+	margin-left: 40px;
+	color: var(--text);
+	font-size: 12px;
+}
+.footer-icon {
+	width: 67px;
+	margin-right: 30px;
+}

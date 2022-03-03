@@ -8,6 +8,7 @@ import Search from "./pages/Search";
 import Stock from "./pages/Stock";
 import Portfolio from "./pages/Portfolio";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 
 function App() {
 	return (
@@ -22,6 +23,7 @@ function App() {
 					<Route path="stock" element={<Stock />} />
 					<Route path="portfolio" element={<Portfolio />} />
 				</Routes>
+				<Footer />
 			</Router>
 		</UserProvider>
 	);
