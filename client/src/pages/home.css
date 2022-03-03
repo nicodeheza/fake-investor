@@ -1,0 +1,64 @@
+.home-header {
+	position: relative;
+	background: var(--bk-dark) url("../assets/home-bk.svg") top no-repeat;
+	background-size: 100%;
+	margin-bottom: 50px;
+}
+.home-header img {
+	width: 100%;
+}
+.home-header h1 {
+	padding: 0px;
+	margin: 0px;
+}
+.home-header p {
+	position: absolute;
+	width: 450px;
+	top: 50%;
+	left: 40%;
+	font-size: 36px;
+}
+.home-header a {
+	position: absolute;
+	bottom: 20px;
+	right: 15%;
+}
+
+.home-article {
+	background: linear-gradient(180deg, var(--bk-light) 0%, var(--bk-dark) 100%);
+	width: 90%;
+	margin: auto;
+	border-radius: 5%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-bottom: 50px;
+	margin-bottom: 50px;
+}
+.home-article section {
+	/* border: solid; */
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	padding: 20px 30px;
+}
+.home-article h1 {
+	color: var(--green);
+	display: flex;
+	flex-direction: column;
+	font-size: 65px;
+}
+.home-article h1 span {
+	color: var(--red);
+	padding-left: 40%;
+	margin-top: -15px;
+}
+.home-article-text {
+	width: 50%;
+}
+.home-article-text-red {
+	color: var(--red);
+}
+.home-article-text-green {
+	color: var(--green);
+}

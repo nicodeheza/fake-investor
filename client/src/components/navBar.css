@@ -8,6 +8,7 @@
 	align-items: center;
 	padding: 10px 5px;
 	background-color: var(--bk-light);
+	z-index: 10;
 }
 .navBarLinks {
 	display: flex;
