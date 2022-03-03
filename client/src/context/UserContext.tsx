@@ -4,7 +4,7 @@ export interface Props {
 	children: ReactNode;
 }
 
-interface Context {
+export interface Context {
 	userName: String;
 	setUserName: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -26,6 +26,4 @@ export function UserProvider({children}: Props) {
 	);
 }
 
-export const useUserName = () => {
-	return useContext(UserContext);
-};
+export const UseUserName = () => useContext(UserContext) as Context;

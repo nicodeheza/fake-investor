@@ -1,0 +1,33 @@
+.navBar {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 5px;
+	background-color: var(--bk-light);
+}
+.navBarLinks {
+	display: flex;
+	align-items: center;
+}
+.navBarStock {
+	margin-right: 200px;
+}
+.navBarStock a {
+	background-color: var(--color);
+	font-weight: bold;
+	color: var(--green);
+	padding: 7px 20px;
+	border-radius: 10px;
+}
+.navBarUser a {
+	margin: 0px 30px;
+	color: var(--text);
+}
+.navBarIcon {
+	width: 36px;
+	height: 36px;
+}
