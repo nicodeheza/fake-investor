@@ -7,7 +7,6 @@ import "./navBar.css";
 export default function NavBar() {
 	const {userName, setUserName} = UseUserName();
 	useEffect(() => {
-		//setUserName("nico");
 		console.log(userName);
 	}, [userName]);
 
