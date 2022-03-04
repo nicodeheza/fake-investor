@@ -110,6 +110,18 @@
 		min-width: 1000px;
 		/* object-position: 50%; */
 	}
+
+	.home-article h1 {
+		font-size: 36px;
+		margin-bottom: 0px;
+	}
+	.home-article img {
+		display: none;
+	}
+
+	.home-article-text {
+		width: 90%;
+	}
 }
 
 @media (max-width: 300px) {
