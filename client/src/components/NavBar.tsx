@@ -55,19 +55,27 @@ export default function NavBar() {
 			<div className={`navBar-mobile ${navOpen ? "nav-on" : "nav-off"}`}>
 				{userName ? (
 					<>
-						<Link to="search">Stocks</Link>
-						<Link to="portfolio">My Portfolio</Link>
-						<Link to="/" onClick={() => logOut()}>
+						<Link to="search" onClick={() => setNavOpen((pre) => !pre)}>
+							Stocks
+						</Link>
+						<Link to="portfolio" onClick={() => setNavOpen((pre) => !pre)}>
+							My Portfolio
+						</Link>
+						<Link to="/" onClick={() => setNavOpen((pre) => !pre)}>
 							Log Out
 						</Link>
 					</>
 				) : (
 					<>
-						<Link to="search">Stocks</Link>
-						<Link to="login" onClick={() => logIn()}>
+						<Link to="search" onClick={() => setNavOpen((pre) => !pre)}>
+							Stocks
+						</Link>
+						<Link to="login" onClick={() => setNavOpen((pre) => !pre)}>
 							Log In
 						</Link>
-						<Link to="singup">Sing Up</Link>
+						<Link to="singup" onClick={() => setNavOpen((pre) => !pre)}>
+							Sing Up
+						</Link>
 					</>
 				)}
 			</div>

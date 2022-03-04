@@ -52,10 +52,12 @@
 		display: none;
 	}
 	.navBar-menuIcon {
-		display: block;
+		display: flex;
 		width: 34px;
 		height: 34px;
 		margin-right: 25px;
+		justify-content: center;
+		align-items: center;
 	}
 	.navBar-mobile {
 		display: block;
