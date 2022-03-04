@@ -6,10 +6,16 @@
 	--text: #d8e6eb;
 	--color: #4339b8;
 }
+html,
 body {
 	font-family: "Roboto", sans-serif;
 	background-color: var(--bk-dark);
 	color: var(--text);
+	margin: 0px;
+	padding: 0px;
+	/* width: 100vw;
+	height: 100vh; */
+	overflow-x: hidden;
 }
 a {
 	text-decoration: none;
