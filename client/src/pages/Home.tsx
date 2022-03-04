@@ -12,11 +12,13 @@ export default function Home() {
 				<h1>
 					<img src={logo} alt="Fake Inversor" />
 				</h1>
-				<p>Train your investment skills as a champion.</p>
+				<div className="home-header-ele">
+					<p>Train your investment skills as a champion.</p>
 
-				<Link to="singup" className="btn-link">
-					Get Started
-				</Link>
+					<Link to="singup" className="btn-link">
+						Get Started
+					</Link>
+				</div>
 			</header>
 			<article className="home-article">
 				<h1>
