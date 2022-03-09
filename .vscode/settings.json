@@ -1,6 +1,7 @@
 {
 	"cSpell.ignoreWords": [
 		"Fake",
+		"Passwords",
 		"Props",
 		"Simulator",
 		"Sing",
@@ -12,6 +13,7 @@
 		"card",
 		"champion",
 		"clamp",
+		"consts",
 		"earn",
 		"fake",
 		"fild",

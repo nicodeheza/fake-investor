@@ -1,10 +1,18 @@
+import "dotenv/config";
 import express from "express";
+import cors from "cors";
+
 const app = express();
+app.use(cors());
 
-app.get("/", (req, res) => {
-	res.send("hello from express");
-});
+import MainRoute from "./routes/MainRoute";
 
-app.listen(4000, () => {
-	console.log("app listen in port 4000");
+app.use(express.json());
+app.use(express.urlencoded());
+
+app.use("/api", MainRoute);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+	console.log(`app listen in port ${PORT}`);
 });
