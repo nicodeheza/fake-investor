@@ -1,6 +1,6 @@
 .home-header {
 	position: relative;
-	background: var(--bk-dark) url("../assets/home-bk.svg") top no-repeat;
+	background: var(--bk-dark) url("../../public/assets/home-bk.svg") top no-repeat;
 	background-size: 100%;
 	margin-bottom: 50px;
 }

@@ -1,4 +1,4 @@
-import ilus2 from "../assets/ilus2.svg";
+// import ilus2 from "../assets/ilus2.svg";
 import "./login-singup.css";
 
 export default function SingUp() {
@@ -10,7 +10,7 @@ export default function SingUp() {
 			<main>
 				<div className="flash-ilus">
 					<div className="flash" />
-					<img src={ilus2} alt="illustration" />
+					<img src="assets/ilus2.svg" alt="illustration" />
 				</div>
 				<div className="login-card">
 					<form className="form-card">

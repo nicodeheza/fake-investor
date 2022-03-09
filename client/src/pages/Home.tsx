@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
-import logo from "../assets/home-logo.svg";
-import ilus1 from "../assets/ilus1.svg";
-import ilus2 from "../assets/ilus2.svg";
-import ilus3 from "../assets/ilus3.svg";
+// import logo from "../assets/home-logo.svg";
+// import ilus1 from "../assets/ilus1.svg";
+// import ilus2 from "../assets/ilus2.svg";
+// import ilus3 from "../assets/ilus3.svg";
 import "./home.css";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
 		<div>
 			<header className="home-header">
 				<h1>
-					<img src={logo} alt="Fake Inversor" />
+					<img src="assets/home-logo.svg" alt="Fake Inversor" />
 				</h1>
 				<div className="home-header-ele">
 					<p>Train your investment skills as a champion.</p>
@@ -25,7 +25,7 @@ export default function Home() {
 					How it <span>works</span>
 				</h1>
 				<section>
-					<img src={ilus1} alt="illustration" />
+					<img src="assets/ilus1.svg" alt="illustration" />
 					<div className="home-article-text">
 						<h3>
 							You <span className="home-article-text-red">start</span> with one million
@@ -52,10 +52,10 @@ export default function Home() {
 							fake stock for more FUD's
 						</p>
 					</div>
-					<img src={ilus2} alt="illustration" />
+					<img src="assets/ilus2.svg" alt="illustration" />
 				</section>
 				<section>
-					<img src={ilus3} alt="illustration" />
+					<img src="assets/ilus3.svg" alt="illustration" />
 					<div className="home-article-text">
 						<h3>
 							You can <span className="home-article-text-red">restart</span> the game all
