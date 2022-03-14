@@ -32,9 +32,12 @@ export default function SingUp() {
 				},
 				body: JSON.stringify(formFields)
 			})
-				.then((res) => res.json)
+				.then((res) => res.json())
 				.then((data) => {
 					console.log(data);
+					if (data.message) {
+						setMessage(data.message);
+					}
 				})
 				.catch((err) => console.log(err));
 			setFormFields({

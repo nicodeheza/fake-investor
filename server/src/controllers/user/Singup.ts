@@ -31,6 +31,6 @@ export default async function Singup(req: express.Request, res: express.Response
 			}
 		}
 	} catch (err) {
-		console.log("su err: ", err);
+		console.log(err);
 	}
 }
