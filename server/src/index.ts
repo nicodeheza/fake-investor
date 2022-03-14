@@ -1,14 +1,17 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import createTables from "./db/tables";
 
 const app = express();
 app.use(cors());
 
+createTables();
+
 import MainRoute from "./routes/MainRoute";
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: false}));
 
 app.use("/api", MainRoute);
 

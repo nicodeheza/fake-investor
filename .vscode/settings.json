@@ -2,11 +2,13 @@
 	"cSpell.ignoreWords": [
 		"Fake",
 		"Passwords",
+		"Please",
 		"Props",
 		"Simulator",
 		"Sing",
 		"Stock",
 		"Stocks",
+		"There",
 		"Train",
 		"accurate",
 		"also",
@@ -26,6 +28,7 @@
 		"logo",
 		"million",
 		"money",
+		"nicodeheza",
 		"possible",
 		"sell",
 		"singin",
@@ -34,5 +37,6 @@
 		"stocks",
 		"them",
 		"works"
-	]
+	],
+	"sqltools.connections": []
 }
