@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../../models/User";
 import {createHash} from "../../functions/password";
+
 export default async function Singup(req: express.Request, res: express.Response) {
 	try {
 		const {email, userName, password, repeat} = req.body;
@@ -21,13 +22,12 @@ export default async function Singup(req: express.Request, res: express.Response
 		if (saveUser === "success") {
 			// log in
 		} else {
-			console.log(saveUser.includes("Users.user_name"));
-			if (saveUser.includes("Users.user_name")) {
-				res.status(400).json({message: "That user name is not available."});
-			} else if (saveUser.includes("Users.email")) {
+			if (saveUser.includes("Users.email")) {
 				res
 					.status(400)
 					.json({message: "There is already an account associated with that email"});
+			} else {
+				res.status(400).json({message: "Error"});
 			}
 		}
 	} catch (err) {

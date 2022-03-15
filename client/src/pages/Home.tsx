@@ -1,8 +1,4 @@
 import {Link} from "react-router-dom";
-// import logo from "../assets/home-logo.svg";
-// import ilus1 from "../assets/ilus1.svg";
-// import ilus2 from "../assets/ilus2.svg";
-// import ilus3 from "../assets/ilus3.svg";
 import "./home.css";
 
 export default function Home() {

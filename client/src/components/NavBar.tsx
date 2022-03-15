@@ -6,19 +6,15 @@ import SmIcon from "../svg/SmIcon";
 import "./navBar.css";
 
 export default function NavBar() {
-	const {userName, setUserName} = UseUserName();
+	const {userName} = UseUserName();
 	const [navOpen, setNavOpen] = useState(false);
 	useEffect(() => {
 		console.log(userName);
 	}, [userName]);
 
 	function logOut() {
-		setUserName("");
+		// setUserName("");
 		console.log("logout");
-	}
-	function logIn() {
-		setUserName("nico");
-		console.log("login");
 	}
 	return (
 		<nav className="navBarContainer">
@@ -40,9 +36,7 @@ export default function NavBar() {
 							</>
 						) : (
 							<>
-								<Link to="login" onClick={() => logIn()}>
-									Log In
-								</Link>
+								<Link to="login">Log In</Link>
 								<Link to="singup">Sing Up</Link>
 							</>
 						)}
