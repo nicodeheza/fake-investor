@@ -1,0 +1,79 @@
+.searchContainer {
+	min-height: 100vh;
+	padding-top: 60px;
+}
+.searchContent {
+	/* border: solid; */
+	width: 80%;
+	margin: auto;
+}
+.searchContent h1 {
+	color: var(--green);
+	font-size: 64px;
+	margin: 20px 0px;
+}
+.searchContent span {
+	color: var(--red);
+}
+.searchContent input {
+	box-sizing: border-box;
+	border: solid var(--color) 1px;
+	border-radius: 20px;
+	width: 100%;
+	height: 1.5rem;
+	background: var(--bk-dark) url("../../public/assets/searchIcon.svg") no-repeat 99% 50%;
+	background-size: 1rem 1rem;
+	color: var(--text);
+	padding: 0px 10px;
+}
+.searchContent input::placeholder {
+	color: var(--text);
+}
+.searchTopContainer {
+	background: linear-gradient(180deg, var(--bk-light) 0%, var(--bk-dark) 100%);
+	margin-top: 80px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50px;
+}
+.searchTopContainer h2 {
+	size: 36px;
+	margin-top: 50px;
+}
+.searchTopContainer table {
+	width: 60%;
+	margin: 30px 0px 90px 0px;
+	border-collapse: collapse;
+}
+.searchTopContainer td {
+	text-align: center;
+	padding: 1rem 0px;
+}
+.searchTopContainer th {
+	border-bottom: solid 1px;
+}
+.loading-td {
+	text-align: center;
+	padding: 0px !important;
+	height: 0px;
+}
+.loading-td div {
+	background: linear-gradient(90deg, var(--bk-dark), var(--bk-light), var(--bk-dark));
+	background-size: 400% 400%;
+	animation: loading 1s linear infinite;
+	width: 90%;
+	height: 60%;
+}
+@keyframes loading {
+	0% {
+		background-position: 110% 50%;
+	}
+	50% {
+		background-position: 50% 50%;
+	}
+	100% {
+		background-position: -10% 50%;
+	}
+}
