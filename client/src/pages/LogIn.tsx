@@ -1,9 +1,11 @@
 import "./login-singup.css";
 import {UseUserName} from "../context/UserContext";
+import {useNavigate} from "react-router-dom";
 import {FormEvent, useState} from "react";
 import {API_URL} from "../consts";
 
 export default function LogIn() {
+	const navigate = useNavigate();
 	const {setUserName} = UseUserName();
 	const [formFields, setFormFields] = useState({
 		email: "",
@@ -24,6 +26,7 @@ export default function LogIn() {
 			.then((data) => {
 				console.log(data);
 				setUserName(data.userName);
+				navigate("/portfolio");
 			})
 			.catch((err) => console.log(err));
 	}
