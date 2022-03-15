@@ -1,20 +1,20 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Link} from "react-router-dom";
 import {UseUserName} from "../context/UserContext";
 import MenuBar from "../svg/MenuBar";
 import SmIcon from "../svg/SmIcon";
+import {API_URL} from "../consts";
 import "./navBar.css";
 
 export default function NavBar() {
-	const {userName} = UseUserName();
+	const {userName, setUserName} = UseUserName();
 	const [navOpen, setNavOpen] = useState(false);
-	useEffect(() => {
-		console.log(userName);
-	}, [userName]);
 
 	function logOut() {
-		// setUserName("");
-		console.log("logout");
+		fetch(`${API_URL}/user/logout`)
+			.then((res) => res.json())
+			.then((data) => setUserName(data.userName))
+			.catch((err) => console.log(err));
 	}
 	return (
 		<nav className="navBarContainer">
