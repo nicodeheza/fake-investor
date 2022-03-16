@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {FormEvent, useState} from "react";
+import {API_URL} from "../consts";
 import "./search.css";
 
 type td = {
@@ -114,9 +115,43 @@ const emptyData: td = {
 		variation: ""
 	}
 };
+type searchRes = {[key: string]: string}[];
 
 export default function Search() {
-	const [topData, setTopData] = useState(emptyData);
+	const [topData, setTopData] = useState(fillData);
+	const [timeOut, setTimeOut] = useState<null | ReturnType<typeof setTimeout>>(null);
+	const [searchResult, setSearchResult] = useState<searchRes | []>([]);
+	const [typing, setTyping] = useState(false);
+
+	function searchStock(query: string) {
+		setSearchResult([]);
+		if (!query) {
+			setTyping(false);
+		} else {
+			setTyping(true);
+		}
+		if (timeOut) {
+			clearTimeout(timeOut);
+		}
+
+		setTimeOut(
+			setTimeout(() => {
+				if (query) {
+					fetch(`${API_URL}/stock/search/${query}`)
+						.then((res) => res.json())
+						.then((data) => {
+							if (data.Note) {
+								setSearchResult([{"1. symbol": "ERROR", "2. name": "Too many calls"}]);
+							} else {
+								setSearchResult(data.bestMatches);
+							}
+							setTyping(false);
+						})
+						.catch((err) => console.log(err));
+				}
+			}, 1000)
+		);
+	}
 
 	return (
 		<div className="searchContainer">
@@ -124,46 +159,67 @@ export default function Search() {
 				<h1>
 					Stoks <span>Searcher</span>
 				</h1>
-				<input type="text" placeholder="Search..." />
+				<input
+					type="text"
+					placeholder="Search..."
+					onChange={(e) => searchStock(e.target.value)}
+				/>
+				{searchResult?.length > 0 && !typing ? (
+					<div className="search-result-box">
+						{searchResult.map((res, i) => (
+							<p key={i}>
+								{res["2. name"]} ( {res["1. symbol"]} )
+							</p>
+						))}
+					</div>
+				) : typing && searchResult?.length === 0 ? (
+					<div className="search-result-box-loading">
+						<img src="assets/loader.svg" alt="loading..." />
+					</div>
+				) : (
+					<></>
+				)}
 				<div className="searchTopContainer">
 					<h2>Top 10 Stocks</h2>
 					<table>
-						<tr>
-							<th>Ranking</th>
-							<th>Name</th>
-							<th>Price</th>
-							<th>Daily Variation</th>
-						</tr>
-						{Object.keys(topData).map((k, i) => (
-							<tr key={i}>
-								<td>{k}</td>
-								{topData[k].name ? (
-									<>
-										<td>{topData[k].name}</td>
-										<td>{topData[k].price}</td>
-										<td
-											className={
-												new RegExp("[+]").test(topData[k].variation) ? "green" : "red"
-											}
-										>
-											{topData[k].variation}
-										</td>
-									</>
-								) : (
-									<>
-										<td className="loading-td">
-											<div />
-										</td>
-										<td className="loading-td">
-											<div />
-										</td>
-										<td className="loading-td">
-											<div />
-										</td>
-									</>
-								)}
+						<tbody>
+							<tr>
+								<th>Ranking</th>
+								<th>Name</th>
+								<th>Price</th>
+								<th>Daily Variation</th>
 							</tr>
-						))}
+							{Object.keys(topData).map((k, i) => (
+								<tr key={i}>
+									<td>{k}</td>
+									{topData[k].name ? (
+										<>
+											<td>{topData[k].name}</td>
+											<td>{topData[k].price}</td>
+											<td
+												className={
+													new RegExp("[+]").test(topData[k].variation) ? "green" : "red"
+												}
+											>
+												{topData[k].variation}
+											</td>
+										</>
+									) : (
+										<>
+											<td className="loading-td">
+												<div />
+											</td>
+											<td className="loading-td">
+												<div />
+											</td>
+											<td className="loading-td">
+												<div />
+											</td>
+										</>
+									)}
+								</tr>
+							))}
+						</tbody>
 					</table>
 				</div>
 			</div>

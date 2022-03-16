@@ -5,6 +5,7 @@
 .searchContent {
 	/* border: solid; */
 	width: 80%;
+	max-width: 900px;
 	margin: auto;
 }
 .searchContent h1 {
@@ -75,5 +76,56 @@
 	}
 	100% {
 		background-position: -10% 50%;
+	}
+}
+
+.search-result-box p {
+	margin: 0px;
+	padding: 0px;
+	height: 30px;
+	font-size: 15px;
+	border-bottom: solid 1px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+.search-result-box p:hover {
+	background-color: var(--color);
+}
+.search-result-box-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.search-result-box-loading img {
+	width: 30px;
+	height: 30px;
+	margin-top: 20px;
+	animation: spinner 2.5s linear infinite;
+}
+@keyframes spinner {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@media (max-width: 750px) {
+	.searchTopContainer table {
+		font-size: 10px;
+		width: 90%;
+	}
+}
+@media (max-width: 300px) {
+	.searchContent h1 {
+		font-size: 32px;
+	}
+	.searchTopContainer {
+		border-radius: 20px;
+	}
+	.search-result-box p {
+		font-size: 10px;
 	}
 }
