@@ -79,7 +79,8 @@
 	}
 }
 
-.search-result-box p {
+.search-result-box-link {
+	color: var(--text);
 	margin: 0px;
 	padding: 0px;
 	height: 30px;
@@ -89,7 +90,7 @@
 	display: flex;
 	align-items: center;
 }
-.search-result-box p:hover {
+.search-result-box-link:hover {
 	background-color: var(--color);
 }
 .search-result-box-loading {

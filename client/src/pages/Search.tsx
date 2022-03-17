@@ -1,4 +1,5 @@
-import {FormEvent, useState} from "react";
+import {useState} from "react";
+import {Link} from "react-router-dom";
 import {API_URL} from "../consts";
 import "./search.css";
 
@@ -152,6 +153,7 @@ export default function Search() {
 			}, 1000)
 		);
 	}
+	//change p for link and make link work
 
 	return (
 		<div className="searchContainer">
@@ -167,9 +169,13 @@ export default function Search() {
 				{searchResult?.length > 0 && !typing ? (
 					<div className="search-result-box">
 						{searchResult.map((res, i) => (
-							<p key={i}>
+							<Link
+								key={i}
+								to={`/stock/${res["1. symbol"]}/${res["2. name"]}`}
+								className="search-result-box-link"
+							>
 								{res["2. name"]} ( {res["1. symbol"]} )
-							</p>
+							</Link>
 						))}
 					</div>
 				) : typing && searchResult?.length === 0 ? (
