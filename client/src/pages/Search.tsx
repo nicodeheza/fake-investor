@@ -162,7 +162,7 @@ export default function Search() {
 					Stoks <span>Searcher</span>
 				</h1>
 				<input
-					type="text"
+					type="search"
 					placeholder="Search..."
 					onChange={(e) => searchStock(e.target.value)}
 				/>

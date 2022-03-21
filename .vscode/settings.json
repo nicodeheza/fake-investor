@@ -1,5 +1,6 @@
 {
 	"cSpell.ignoreWords": [
+		"Chart",
 		"Daily",
 		"Fake",
 		"Passwords",
@@ -16,8 +17,11 @@
 		"accurate",
 		"also",
 		"apikey",
+		"arrow",
+		"calendar-picker-indicator",
 		"card",
 		"champion",
+		"chart",
 		"clamp",
 		"consts",
 		"daily",
@@ -26,6 +30,7 @@
 		"fild",
 		"going",
 		"gradient",
+		"graf",
 		"illustration",
 		"ilus",
 		"investment",

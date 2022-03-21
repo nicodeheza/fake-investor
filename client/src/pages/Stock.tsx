@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {API_URL} from "../consts";
 import Arrow from "../svg/Arrow";
+import Chart from "../components/stock/Chart";
+import "./stock.css";
 
 type data = {
 	lastPrice: number;
@@ -38,7 +40,7 @@ export default function Stock() {
 	return (
 		<>
 			{data ? (
-				<div>
+				<div className="stock-main-container">
 					<h1>
 						{params.name} ({params.symbol})
 					</h1>
@@ -48,10 +50,16 @@ export default function Stock() {
 							<p>Price</p>
 						</div>
 						<div className="stock-main-bar-daily">
-							<h3>
-								<div>
+							<h3
+								style={
+									data.dailyVariationMon >= 0
+										? {color: "var(--green)"}
+										: {color: "var(--red)"}
+								}
+							>
+								<samp className="stock-main-bar-daily-arrow">
 									<Arrow pos={data.dailyVariationMon >= 0 ? "up" : "down"} />
-								</div>
+								</samp>
 								{data.dailyVariationMon >= 0
 									? `+${roundFloat(data.dailyVariationMon)}/+${roundFloat(
 											data.dailyVariationPer
@@ -62,47 +70,66 @@ export default function Stock() {
 							</h3>
 							<p>Daily Variation</p>
 						</div>
-						<div className="stock-b">
-							<div className="stock-b-data">
-								<div className="stock-b-data-item">
-									<p>Monthly Variation</p>
-									<p>
-										<div>
-											<Arrow pos={data.monthlyVariationMon >= 0 ? "up" : "down"} />
-										</div>
-										{data.monthlyVariationMon >= 0
-											? `+${roundFloat(data.monthlyVariationMon)}/+${roundFloat(
-													data.monthlyVariationPer
-											  )}%`
-											: `${roundFloat(data.monthlyVariationMon)}/${roundFloat(
-													data.monthlyVariationPer
-											  )}%`}
-									</p>
-								</div>
-								<div className="stock-b-data-item">
-									<p>Last 12 month variation</p>
-									<p>
+					</div>
+					<div className="stock-b">
+						<div className="stock-b-data">
+							<div className="stock-b-data-item">
+								<p className="stock-b-data-item-l">Monthly Variation</p>
+								<p
+									className="stock-b-data-item-r"
+									style={
+										data.monthlyVariationMon >= 0
+											? {color: "var(--green)"}
+											: {color: "var(--red)"}
+									}
+								>
+									<span>
+										<Arrow pos={data.monthlyVariationMon >= 0 ? "up" : "down"} />
+									</span>
+									{data.monthlyVariationMon >= 0
+										? `+${roundFloat(data.monthlyVariationMon)}/+${roundFloat(
+												data.monthlyVariationPer
+										  )}%`
+										: `${roundFloat(data.monthlyVariationMon)}/${roundFloat(
+												data.monthlyVariationPer
+										  )}%`}
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p className="stock-b-data-item-l">Last 12 month variation</p>
+								{data.last12Mon && data.last12Per ? (
+									<p
+										className="stock-b-data-item-r"
+										style={
+											data.last12Mon >= 0
+												? {color: "var(--green)"}
+												: {color: "var(--red)"}
+										}
+									>
 										{!data.last12Mon ? null : (
-											<div>
+											<span>
 												<Arrow pos={data.last12Mon >= 0 ? "up" : "down"} />
-											</div>
+											</span>
 										)}
-										{!data.last12Mon || !data.last12Per
-											? "NaN"
-											: data.last12Mon >= 0
+										{data.last12Mon >= 0
 											? `+${roundFloat(data.last12Mon)}/+${roundFloat(data.last12Per)}%`
 											: `${roundFloat(data.last12Mon)}/${roundFloat(data.last12Per)}%`}
 									</p>
-								</div>
-								<div className="stock-b-data-item">
-									<p>Volume</p>
-									<p>{data.volume}</p>
-								</div>
-								<div className="stock-b-data-item">
-									<p>Avg.volume(3m)</p>
-									<p>{data.avgVolume}</p>
-								</div>
+								) : (
+									<p>NaN</p>
+								)}
 							</div>
+							<div className="stock-b-data-item">
+								<p>Volume</p>
+								<p>{data.volume}</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p>Avg.volume(3m)</p>
+								<p>{roundFloat(data.avgVolume)}</p>
+							</div>
+						</div>
+						<div className="stock-b-chart-container">
+							<Chart />
 						</div>
 					</div>
 				</div>
