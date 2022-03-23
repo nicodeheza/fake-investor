@@ -9,14 +9,23 @@
 	margin: auto;
 }
 .searchContent h1 {
+	position: relative;
 	color: var(--green);
 	font-size: 64px;
 	margin: 20px 0px;
+	z-index: 2;
+}
+.searchContent-sparck {
+	position: absolute;
+	top: -100px;
+	left: -250px;
+	z-index: 1;
 }
 .searchContent span {
 	color: var(--red);
 }
 .searchContent input {
+	position: relative;
 	box-sizing: border-box;
 	border: solid var(--color) 1px;
 	border-radius: 20px;
@@ -24,14 +33,17 @@
 	height: 1.5rem;
 	background: var(--bk-dark) url("../../public/assets/searchIcon.svg") no-repeat 99% 50%;
 	background-size: 1rem 1rem;
+	background-color: var(--bk-dark);
 	color: var(--text);
 	padding: 0px 10px;
 	text-align: left !important;
+	z-index: 2;
 }
 .searchContent input::placeholder {
 	color: var(--text);
 }
 .searchTopContainer {
+	position: relative;
 	background: linear-gradient(180deg, var(--bk-light) 0%, var(--bk-dark) 100%);
 	margin-top: 80px;
 	display: flex;
@@ -39,6 +51,7 @@
 	justify-content: center;
 	align-items: center;
 	border-radius: 50px;
+	z-index: 2;
 }
 .searchTopContainer h2 {
 	size: 36px;
@@ -80,9 +93,10 @@
 	}
 }
 .search-result-box {
-	/* border: solid; */
+	position: relative;
 	margin: 0px;
 	padding: 0px;
+	z-index: 2;
 }
 
 .search-result-box-link {
@@ -107,10 +121,12 @@
 	align-items: center;
 }
 .search-result-box-loading img {
+	position: relative;
 	width: 30px;
 	height: 30px;
 	margin-top: 20px;
 	animation: spinner 2.5s linear infinite;
+	z-index: 2;
 }
 @keyframes spinner {
 	0% {

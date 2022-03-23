@@ -160,6 +160,11 @@ export default function Search() {
 		<div className="searchContainer">
 			<div className="searchContent">
 				<h1>
+					<img
+						src="./assets/sparck.svg"
+						alt="sparck img"
+						className="searchContent-sparck"
+					/>
 					Stoks <span>Searcher</span>
 				</h1>
 				<input
