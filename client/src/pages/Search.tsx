@@ -141,10 +141,11 @@ export default function Search() {
 					fetch(`${API_URL}/stock/search/${query}`)
 						.then((res) => res.json())
 						.then((data) => {
-							if (data.Note) {
-								setSearchResult([{"1. symbol": "ERROR", "2. name": "Too many calls"}]);
+							console.log(data);
+							if (!data.ResultSet.Result) {
+								setSearchResult([{symbol: "ERROR", name: "Too many calls"}]);
 							} else {
-								setSearchResult(data.bestMatches);
+								setSearchResult(data.ResultSet.Result);
 							}
 							setTyping(false);
 						})
@@ -171,10 +172,10 @@ export default function Search() {
 						{searchResult.map((res, i) => (
 							<Link
 								key={i}
-								to={`/stock/${res["1. symbol"]}/${res["2. name"]}`}
+								to={`/stock/${res.symbol}/${res.name}`}
 								className="search-result-box-link"
 							>
-								{res["2. name"]} ( {res["1. symbol"]} )
+								{res.name} ( {res.symbol} )
 							</Link>
 						))}
 					</div>
