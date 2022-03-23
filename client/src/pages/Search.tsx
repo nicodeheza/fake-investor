@@ -168,17 +168,15 @@ export default function Search() {
 					onChange={(e) => searchStock(e.target.value)}
 				/>
 				{searchResult?.length > 0 && !typing ? (
-					<div className="search-result-box">
+					<ul className="search-result-box">
 						{searchResult.map((res, i) => (
-							<Link
-								key={i}
-								to={`/stock/${res.symbol}/${res.name}`}
-								className="search-result-box-link"
-							>
-								{res.name} ( {res.symbol} )
-							</Link>
+							<li className="search-result-box-link" key={i}>
+								<Link to={`/stock/${res.symbol}/${res.name}`}>
+									{res.name} ( {res.symbol} )
+								</Link>
+							</li>
 						))}
-					</div>
+					</ul>
 				) : typing && searchResult?.length === 0 ? (
 					<div className="search-result-box-loading">
 						<img src="assets/loader.svg" alt="loading..." />
