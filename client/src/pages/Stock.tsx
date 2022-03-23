@@ -4,6 +4,7 @@ import {API_URL} from "../consts";
 import Arrow from "../svg/Arrow";
 import Chart from "../components/stock/Chart";
 import "./stock.css";
+import SortStockData from "../functions/SortStockData";
 
 type data = {
 	lastPrice: number;
@@ -29,7 +30,7 @@ export default function Stock() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log(data);
-				setData(data);
+				setData(SortStockData(data));
 			})
 			.catch((err) => console.log(err));
 	}, [params]);

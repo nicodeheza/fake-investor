@@ -6,8 +6,8 @@ export default function Chart() {
 				<label htmlFor="s-range">Range:</label>
 				<select name="s-range" id="s-range">
 					<option value="day">day</option>
-					<option value="Month">month</option>
-					<option value="year">year</option>
+					<option value="week">week</option>
+					<option value="month">month</option>
 				</select>
 			</div>
 			<div className="s-input">

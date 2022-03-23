@@ -26,6 +26,7 @@
 	background-size: 1rem 1rem;
 	color: var(--text);
 	padding: 0px 10px;
+	text-align: left !important;
 }
 .searchContent input::placeholder {
 	color: var(--text);
