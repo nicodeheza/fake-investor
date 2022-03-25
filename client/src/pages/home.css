@@ -15,7 +15,7 @@
 	position: absolute;
 	max-width: 450px;
 	width: 50%;
-	top: 50%;
+	top: 60%;
 	left: 40%;
 	font-size: clamp(18px, 5vw, 36px);
 }

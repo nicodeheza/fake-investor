@@ -15,7 +15,7 @@ export default async function SearchStock(req: Request, res: Response) {
 			}
 		);
 		const data = await apiRes.json();
-		console.log(data);
+		// console.log(data);
 		res.status(200).json(data);
 	} catch (err) {
 		console.log(err);

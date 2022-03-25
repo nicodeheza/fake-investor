@@ -178,7 +178,7 @@ export default function Search() {
 					<ul className="search-result-box">
 						{searchResult.map((res, i) => (
 							<li className="search-result-box-link" key={i}>
-								<Link to={`/stock/${res.symbol}/${res.name}`}>
+								<Link to={`/stock/${res.symbol}`}>
 									{res.name} ( {res.symbol} )
 								</Link>
 							</li>

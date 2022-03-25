@@ -87,15 +87,15 @@ p {
 /* -----------------chart-container-------------------------- */
 
 .stock-b-chart-container {
-	display: grid;
+	/* display: grid;
 	grid-template-rows: auto auto;
 	grid-template-columns: repeat(3, auto);
-	gap: 10px;
+	gap: 10px; */
 	/* border: solid; */
 }
 
 .stock-b-graf {
-	width: 100%;
+	width: 40vw;
 	/* height: 25vw; */
 	padding-top: 56.25%;
 	background-color: red;
@@ -104,12 +104,12 @@ p {
 	border-radius: 20px;
 	justify-self: center;
 }
-.stock-b-chart-container label {
+/* .stock-b-chart-container label {
 	font-size: 0.8rem;
 	margin-right: 10px;
-}
+} */
 
-.stock-b-chart-container select,
+/* .stock-b-chart-container select,
 input {
 	background-color: var(--bk-dark);
 	color: var(--text);
@@ -123,16 +123,15 @@ input {
 }
 input[type="date"]::-webkit-calendar-picker-indicator {
 	filter: invert(1);
-}
-.s-input,
+} */
+/* .s-input,
 .s-input-range {
 	grid-row: 2 / 3;
 	white-space: nowrap;
-	/* border: solid; */
 	height: fit-content;
-}
+} */
 
-@media (max-width: 1100px) {
+/* @media (max-width: 1100px) {
 	.stock-b-chart-container {
 		grid-template-rows: auto auto auto;
 		grid-template-columns: repeat(2, auto);
@@ -148,7 +147,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		grid-column: 2 / 3;
 		justify-self: end;
 	}
-}
+} */
 
 @media (max-width: 900px) {
 	.stock-b {
@@ -160,6 +159,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	.stock-b-data {
 		/* border: solid; */
 		width: 70%;
+	}
+	.stock-b-graf {
+		width: 70vw;
 	}
 }
 

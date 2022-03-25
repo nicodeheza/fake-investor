@@ -20,7 +20,7 @@ function App() {
 					<Route path="login" element={<LogIn />} />
 					<Route path="singup" element={<SingUp />} />
 					<Route path="search" element={<Search />} />
-					<Route path="stock/:symbol/:name" element={<Stock />} />
+					<Route path="stock/:symbol" element={<Stock />} />
 					<Route path="portfolio" element={<Portfolio />} />
 				</Routes>
 				<Footer />

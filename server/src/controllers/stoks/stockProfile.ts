@@ -1,42 +1,35 @@
 import {Request, Response} from "express";
 import fetch from "node-fetch";
-import apiUrl from "../../functions/apiUrl";
 
 export default async function stockProfile(req: Request, res: Response) {
-	const sendData = {
-		daily: {},
-		weekly: {},
-		monthly: {}
-	};
-	const aFunctions = ["TIME_SERIES_DAILY", "TIME_SERIES_WEEKLY", "TIME_SERIES_MONTHLY"];
-	const urls = aFunctions.map((f) => apiUrl(f, req.params.symbol));
-	//console.log(urls);
-
 	try {
-		const data = await Promise.all(
-			urls.map(async (url) => {
-				const resp = await fetch(url);
-				return await resp.json();
-			})
-		);
-		// console.log(data);
-
-		data.forEach((obj) => {
-			console.log(obj);
-			if ("Time Series (Daily)" in obj) {
-				// console.log("d");
-				sendData.daily = obj["Time Series (Daily)"];
-			} else if ("Weekly Time Series" in obj) {
-				// console.log("w");
-				sendData.weekly = obj["Weekly Time Series"];
-			} else if ("Monthly Time Series" in obj) {
-				// console.log("m");
-				sendData.monthly = obj["Monthly Time Series"];
+		const response = await fetch(
+			`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${req.params.symbol}`,
+			{
+				method: "GET",
+				headers: {
+					"x-api-key": process.env.YF_API_KEY || "",
+					"Content-Type": "application/json"
+				}
 			}
-		});
-		console.log("----------------");
-		// console.log(sendData.daily);
-		//console.log("stockProfile");
+		);
+		const resData = await response.json();
+		const data = resData.quoteResponse.result[0];
+
+		const sendData = {
+			longName: data.longName,
+			regularMarketPrice: data.regularMarketPrice,
+			regularMarketChange: data.regularMarketChange,
+			regularMarketChangePercent: data.regularMarketChangePercent,
+			regularMarketPreviousClose: data.regularMarketPreviousClose,
+			regularMarketOpen: data.regularMarketOpen,
+			regularMarketDayRange: data.regularMarketDayRange,
+			fiftyTwoWeekRange: data.fiftyTwoWeekRange,
+			regularMarketVolume: data.regularMarketVolume,
+			averageDailyVolume3Month: data.averageDailyVolume3Month,
+			userProp: false
+		};
+		// console.log(sendData);
 		res.status(200).json(sendData);
 	} catch (err) {
 		console.log(err);
