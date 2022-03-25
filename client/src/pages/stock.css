@@ -86,13 +86,13 @@ p {
 
 /* -----------------chart-container-------------------------- */
 
-.stock-b-chart-container {
-	/* display: grid;
+/* .stock-b-chart-container {
+	 display: grid;
 	grid-template-rows: auto auto;
 	grid-template-columns: repeat(3, auto);
-	gap: 10px; */
-	/* border: solid; */
-}
+	gap: 10px; 
+	 border: solid; 
+} */
 
 .stock-b-graf {
 	width: 40vw;
