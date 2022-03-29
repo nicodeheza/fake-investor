@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../../consts";
 import * as d3 from "d3";
-import {D3ZoomEvent} from "d3";
 
 interface chart {
 	symbol: string | undefined;
@@ -54,121 +53,192 @@ export default function Chart({symbol}: chart) {
 	//create chart
 	useEffect(() => {
 		if (charData && grafDimensions !== undefined) {
+			const month = [
+				"Jan",
+				"Feb",
+				"Mar",
+				"Apr",
+				"May",
+				"Jun",
+				"Jul",
+				"Aug",
+				"Sep",
+				"Oct",
+				"Nov",
+				"Dec"
+			];
+			const margin = {top: 0, right: 65, bottom: 30, left: 50};
+			const w = grafDimensions.w - margin.left - margin.right;
+			const h = grafDimensions.h - margin.top - margin.bottom;
+
+			d3.select("#chartG").remove();
+
 			const svg = d3
 				.select(svgEle.current)
-				.attr("viewBox", [0, 0, grafDimensions.w, grafDimensions.h]);
+				.attr("width", w + margin.left + margin.right)
+				.attr("height", h + margin.top + margin.bottom)
+				.append("g")
+				.attr("id", "chartG")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			//x scales
 			const scaleX = d3
-				.scaleTime()
-				.range([0, grafDimensions.w])
-				.domain([d3.min(charData.timestamp) || 0, d3.max(charData.timestamp) || 0]);
-
-			const yMax = d3.max(charData.high);
-			const scaleY = d3
 				.scaleLinear()
-				.range([0, grafDimensions.h])
-				.nice()
-				.domain([0, yMax || 0]);
+				.domain([-1, charData.timestamp.length])
+				.range([0, w]);
+			// const xDateScale = d3
+			// 	.scaleQuantize()
+			// 	.domain([0, charData.timestamp.length])
+			// 	.domain(charData.timestamp);
+			const xBand = d3
+				.scaleBand()
+				.domain(charData.timestamp.map((d) => new Date(d).toString()))
+				.range([0, w])
+				.padding(0.15);
 
-			const clip = svg
-				.append("defs")
-				.append("SVG:clipPath")
-				.attr("id", "clip")
-				.append("SVG:rect")
-				.attr("width", grafDimensions.w)
-				.attr("height", grafDimensions.h)
-				.attr("x", 0)
-				.attr("y", 0);
+			//y acle
+			const yMax = d3.max(charData.high) || 0;
+			const yMin = d3.min(charData.low) || 0;
+			const scaleY = d3.scaleLinear().domain([yMin, yMax]).range([h, 0]).nice();
 
-			const line = svg.append("g").attr("clip-path", "url(#clip)");
-			line
-				.selectAll("line")
-				.data(charData.timestamp)
-				.join("line")
-				.attr("y1", (d, i) => scaleY(charData.high[i]))
-				.attr("y2", (d, i) => scaleY(charData.low[i]))
-				.attr("x1", (d) => scaleX(new Date(d)))
-				.attr("x2", (d) => scaleX(new Date(d)))
-				.style("stroke", (d, i) =>
-					charData.close[i] < charData.open[i] ? "var(--red)" : "var(--green)"
-				)
-				.style("stroke-width", "1px");
-
-			const rect = svg.append("g").attr("clip-path", "url(#clip)");
-			rect
-				.selectAll("rect")
-				.data(charData.timestamp)
-				.join("rect")
-				.attr("x", (d) => scaleX(new Date(d)))
-				.attr("y", (d, i) =>
-					scaleY(
-						charData.open[i] > charData.close[i] ? charData.open[i] : charData.close[i]
-					)
-				)
-				.attr("width", (d, i) =>
-					Math.abs(scaleX(charData.timestamp[1]) - scaleX(charData.timestamp[0]))
-				)
-				.attr("height", (d, i) => {
-					const r = scaleY(Math.abs(charData.close[i] - charData.open[i]));
-					return r < 0 ? 0 : r;
-				})
-				.style("fill", (d, i) =>
-					charData.close[i] < charData.open[i] ? "var(--red)" : "var(--green)"
-				);
-
-			const zoom = d3
-				.zoom<SVGRectElement, unknown>()
-				.scaleExtent([1, 50])
-				.extent([
-					[0, 0],
-					[grafDimensions.w, grafDimensions.h]
-				])
-				.on("zoom", (e) => {
-					const newX = e.transform.rescaleX(scaleX);
-					const newY = e.transform.rescaleY(scaleY);
-
-					line
-						.selectAll("line")
-						.data(charData.timestamp)
-						.join("line")
-						.attr("y1", (d, i) => newY(charData.high[i]))
-						.attr("y2", (d, i) => newY(charData.low[i]))
-						.attr("x1", (d) => newX(new Date(d)))
-						.attr("x2", (d) => newX(new Date(d)));
-
-					rect
-						.selectAll("rect")
-						.data(charData.timestamp)
-						.join("rect")
-						.attr("x", (d) => newX(new Date(d)))
-						// .attr("y", (d, i) =>
-						// 	newY(
-						// 		charData.open[i] > charData.close[i]
-						// 			? charData.open[i]
-						// 			: charData.close[i]
-						// 	)
-						// )
-						.attr("y", (d, i) => {
-							const o = newX(charData.open[i]);
-							const c = newX(charData.close[i]);
-							return o > c ? o : c;
-						})
-						.attr("width", (d) =>
-							Math.abs(newX(charData.timestamp[1]) - newX(charData.timestamp[0]))
-						)
-						// .attr("width", 3)
-						.attr("height", (d, i) => {
-							const r = newY(Math.abs(charData.close[i] - charData.open[i]));
-							return r < 0 ? 0 : r;
-						});
-				});
-
+			//pointer rect
 			svg
 				.append("rect")
-				.attr("width", grafDimensions.w)
-				.attr("height", grafDimensions.h)
+				.attr("id", "rect")
+				.attr("width", w)
+				.attr("height", h)
 				.style("fill", "none")
 				.style("pointer-events", "all")
-				.call(zoom);
+				.attr("clip-path", "url(#clip)");
+
+			//append x axis
+			const xAxis = d3.axisBottom(scaleX).tickFormat((d, i) => {
+				const date = new Date(charData.timestamp[i]);
+				const day = date.getDate();
+				return day === 1
+					? month[date.getMonth()] + " / " + date.getFullYear().toString()
+					: day.toString();
+			});
+			var gX = svg
+				.append("g")
+				.attr("class", "axis x-axis") //Assign "axis" class
+				.attr("transform", "translate(0," + h + ")")
+				.call(xAxis);
+
+			// 	gX.selectAll(".tick text")
+			// .call(wrap, xBand.bandwidth())
+			//append y axis
+			const yAxis = d3.axisLeft(scaleY);
+			const gY = svg.append("g").attr("class", "axis y-axis").call(yAxis);
+
+			const chartBody = svg
+				.append("g")
+				.attr("class", "chartBody")
+				.attr("clip-path", "url(#clip)");
+
+			// draw rectangles
+			const candels = chartBody
+				.selectAll(".candel")
+				.data(charData.open)
+				.enter()
+				.append("rect")
+				.attr("x", (d, i) => scaleX(i) - xBand.bandwidth())
+				.attr("y", (d, i) => scaleY(Math.max(d, charData.close[i])))
+				.attr("width", xBand.bandwidth())
+				.attr("height", (d, i) =>
+					d === charData.close[i]
+						? 1
+						: scaleY(Math.min(d, charData.close[i])) -
+						  scaleY(Math.max(d, charData.close[i]))
+				)
+				.style("fill", (d, i) =>
+					d <= charData.close[i] ? "var(--green)" : "var(--red)"
+				);
+
+			// draw high and low
+			const stems = chartBody
+				.selectAll("g.line")
+				.data(charData.high)
+				.enter()
+				.append("line")
+				.attr("x1", (d, i) => scaleX(i) - xBand.bandwidth() / 2)
+				.attr("x2", (d, i) => scaleX(i) - xBand.bandwidth() / 2)
+				.attr("y1", (d) => scaleY(d))
+				.attr("y2", (d, i) => scaleY(charData.low[i]))
+				.style("stroke", (d, i) =>
+					charData.open[i] <= charData.close[i] ? "var(--green)" : "var(--red)"
+				);
+
+			//clip
+			svg
+				.append("defs")
+				.append("clipPath")
+				.attr("id", "clip")
+				.append("rect")
+				.attr("width", w)
+				.attr("height", h);
+
+			//zoom
+
+			const zoomed = (e: any) => {
+				const t = e.transform;
+				const xScaleZ = t.rescaleX(scaleX);
+				const yScaleZ = t.rescaleY(scaleY);
+
+				gX.call(
+					d3.axisBottom(xScaleZ).tickFormat((d, i) => {
+						const dd = parseFloat(d.toString());
+						if (!Number.isInteger(dd) || dd < 0 || dd > charData.timestamp.length - 1) {
+							return "";
+						} else {
+							const date = new Date(charData.timestamp[dd]);
+							const day = date.getDate();
+							return day === 1
+								? month[date.getMonth()] + " / " + date.getFullYear().toString()
+								: day.toString();
+						}
+					})
+				);
+
+				gY.call(d3.axisLeft(yScaleZ));
+
+				candels
+					.attr("x", (d, i) => xScaleZ(i) - (xBand.bandwidth() * t.k) / 2)
+					.attr("width", xBand.bandwidth() * t.k)
+					.attr("y", (d, i) => yScaleZ(Math.max(charData.open[i], charData.close[i])))
+					.attr("height", (d, i) =>
+						charData.open[i] === charData.close[i]
+							? 1
+							: yScaleZ(Math.min(charData.open[i], charData.close[i])) -
+							  yScaleZ(Math.max(charData.open[i], charData.close[i]))
+					);
+
+				stems.attr(
+					"x1",
+					(d, i) => xScaleZ(i) - xBand.bandwidth() / 2 + xBand.bandwidth() * 0.5
+				);
+				stems.attr(
+					"x2",
+					(d, i) => xScaleZ(i) - xBand.bandwidth() / 2 + xBand.bandwidth() * 0.5
+				);
+				stems.attr("y1", (d, i) => yScaleZ(charData.high[i]));
+				stems.attr("y2", (d, i) => yScaleZ(charData.low[i]));
+			};
+
+			const extent: [[number, number], [number, number]] = [
+				[0, 0],
+				[w, h]
+			];
+			//let resizeTimer;
+			const zoom = d3
+				.zoom<SVGGElement, unknown>()
+				.scaleExtent([1, 100])
+				.translateExtent(extent)
+				.extent(extent)
+				.on("zoom", zoomed);
+			//.on("zoom.end", zoomed);
+
+			svg.call(zoom);
 		}
 	}, [charData, grafDimensions]);
 
