@@ -19,19 +19,34 @@ type data = {
 	userProp: boolean;
 };
 
+const m: data = {
+	longName: "dsgsfhdg",
+	regularMarketPrice: 453,
+	regularMarketChange: 345,
+	regularMarketChangePercent: 345,
+	regularMarketPreviousClose: 345,
+	regularMarketOpen: 345,
+	regularMarketDayRange: "45-46",
+	fiftyTwoWeekRange: "56-67",
+	regularMarketVolume: 60000,
+	averageDailyVolume3Month: 60000,
+	userProp: false
+};
+
 export default function Stock() {
 	const params = useParams();
 	const [data, setData] = useState<data | undefined>();
 
 	useEffect(() => {
 		console.log(params.symbol);
-		fetch(`${API_URL}/stock/${params.symbol}`)
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data);
-				setData(data);
-			})
-			.catch((err) => console.log(err));
+		// fetch(`${API_URL}/stock/${params.symbol}`)
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		console.log(data);
+		// 		setData(data);
+		// 	})
+		// 	.catch((err) => console.log(err));
+		setData(m);
 	}, [params]);
 
 	function roundTow(num: number) {

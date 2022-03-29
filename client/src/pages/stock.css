@@ -96,13 +96,14 @@ p {
 
 .stock-b-graf {
 	width: 40vw;
-	/* height: 25vw; */
-	padding-top: 56.25%;
-	background-color: red;
+	height: 25vw;
+	/* padding-top: 56.25%; */
+	background: linear-gradient(180deg, var(--bk-light) 0%, var(--bk-dark) 100%);
 	grid-row: 1 / 2;
 	grid-column: 1 / 4;
 	border-radius: 20px;
 	justify-self: center;
+	/* border: solid; */
 }
 /* .stock-b-chart-container label {
 	font-size: 0.8rem;
@@ -162,6 +163,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	}
 	.stock-b-graf {
 		width: 70vw;
+		height: 40vw;
 	}
 }
 

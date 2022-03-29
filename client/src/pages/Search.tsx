@@ -142,7 +142,7 @@ export default function Search() {
 						.then((res) => res.json())
 						.then((data) => {
 							console.log(data);
-							if (!data.ResultSet.Result) {
+							if (!data?.ResultSet?.Result) {
 								setSearchResult([{symbol: "ERROR", name: "Too many calls"}]);
 							} else {
 								setSearchResult(data.ResultSet.Result);
