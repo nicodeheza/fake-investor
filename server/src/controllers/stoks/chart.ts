@@ -175,23 +175,23 @@ const m = {
 export default async function chart(req: Request, res: Response) {
 	const ticker = req.params.symbol.toUpperCase();
 	try {
-		// const response = await fetch(
-		// 	`https://yfapi.net/v8/finance/chart/${ticker}?range=5y&region=US&interval=1d&lang=en`,
-		// 	{
-		// 		method: "GET",
-		// 		headers: {
-		// 			"x-api-key": process.env.YF_API_KEY || "",
-		// 			"Content-Type": "application/json"
-		// 		}
-		// 	}
-		// );
-		// const resData = await response.json();
+		const response = await fetch(
+			`https://yfapi.net/v8/finance/chart/${ticker}?range=5y&region=US&interval=1d&lang=en`,
+			{
+				method: "GET",
+				headers: {
+					"x-api-key": process.env.YF_API_KEY || "",
+					"Content-Type": "application/json"
+				}
+			}
+		);
+		const resData = await response.json();
 		// console.log(resData);
-		const resData = m;
+		// const resData = m;
 		const d: number[] = resData.chart.result[0].timestamp;
 
 		// console.log(d.length);
-		// d.forEach((date: number) => console.log(new Date(date * 1000)));
+		d.forEach((date: number) => console.log(new Date(date * 1000)));
 		const jsTimestamp = d.map((n) => n * 1000);
 		const resObj = {
 			timestamp: jsTimestamp,

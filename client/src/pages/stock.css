@@ -95,6 +95,7 @@ p {
 } */
 
 .stock-b-graf {
+	position: relative;
 	width: 40vw;
 	height: 25vw;
 	/* padding-top: 56.25%; */
@@ -186,4 +187,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 		grid-column: 1 / 2;
 		justify-self: end;
 	}
+}
+
+.domain,
+.tick line {
+	display: none;
 }

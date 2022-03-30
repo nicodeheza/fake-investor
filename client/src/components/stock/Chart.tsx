@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../../consts";
+import chartMock from "./chartMock";
 import * as d3 from "d3";
 
 interface chart {
@@ -21,17 +22,18 @@ interface grafDim {
 export default function Chart({symbol}: chart) {
 	const [charData, setChartData] = useState<chartData | undefined>();
 	const [grafDimensions, setGrafDimensions] = useState<grafDim | undefined>();
-	const svgEle = useRef<SVGSVGElement>(null!);
+	const svgEle = useRef<HTMLDivElement>(null!);
 	//fetch Data
 	useEffect(() => {
 		if (symbol) {
-			fetch(`${API_URL}/stock/chart/${symbol}`)
-				.then((res) => res.json())
-				.then((data) => {
-					console.log(data);
-					setChartData(data);
-				})
-				.catch((err) => console.log(err));
+			// fetch(`${API_URL}/stock/chart/${symbol}`)
+			// 	.then((res) => res.json())
+			// 	.then((data) => {
+			// 		console.log(data);
+			// 		setChartData(data);
+			// 	})
+			// 	.catch((err) => console.log(err));
+			setChartData(chartMock);
 		}
 	}, [symbol]);
 
@@ -67,14 +69,16 @@ export default function Chart({symbol}: chart) {
 				"Nov",
 				"Dec"
 			];
-			const margin = {top: 0, right: 65, bottom: 30, left: 50};
+			const margin = {top: 10, right: 10, bottom: 40, left: 40};
 			const w = grafDimensions.w - margin.left - margin.right;
 			const h = grafDimensions.h - margin.top - margin.bottom;
 
 			d3.select("#chartG").remove();
+			d3.select(".tooltip-stock").remove();
 
 			const svg = d3
 				.select(svgEle.current)
+				.append("svg")
 				.attr("width", w + margin.left + margin.right)
 				.attr("height", h + margin.top + margin.bottom)
 				.append("g")
@@ -86,17 +90,13 @@ export default function Chart({symbol}: chart) {
 				.scaleLinear()
 				.domain([-1, charData.timestamp.length])
 				.range([0, w]);
-			// const xDateScale = d3
-			// 	.scaleQuantize()
-			// 	.domain([0, charData.timestamp.length])
-			// 	.domain(charData.timestamp);
 			const xBand = d3
 				.scaleBand()
 				.domain(charData.timestamp.map((d) => new Date(d).toString()))
 				.range([0, w])
 				.padding(0.15);
 
-			//y acle
+			//y scale
 			const yMax = d3.max(charData.high) || 0;
 			const yMin = d3.min(charData.low) || 0;
 			const scaleY = d3.scaleLinear().domain([yMin, yMax]).range([h, 0]).nice();
@@ -112,12 +112,25 @@ export default function Chart({symbol}: chart) {
 				.attr("clip-path", "url(#clip)");
 
 			//append x axis
+			const ld: number[] = [];
 			const xAxis = d3.axisBottom(scaleX).tickFormat((d, i) => {
-				const date = new Date(charData.timestamp[i]);
+				const dd = parseInt(d.toString());
+				const date = new Date(charData.timestamp[dd]);
+				let lastDate;
+				if (i > 0) {
+					lastDate = new Date(charData.timestamp[ld[ld.length - 1]]);
+				}
+				ld.push(dd);
 				const day = date.getDate();
-				return day === 1
-					? month[date.getMonth()] + " / " + date.getFullYear().toString()
-					: day.toString();
+				if (dd > 0 && dd < charData.timestamp.length) {
+					return lastDate &&
+						lastDate.getFullYear() === date.getFullYear() &&
+						lastDate.getMonth() === date.getMonth()
+						? day.toString()
+						: month[date.getMonth()] + " " + date.getFullYear().toString();
+				} else {
+					return "";
+				}
 			});
 			var gX = svg
 				.append("g")
@@ -125,8 +138,44 @@ export default function Chart({symbol}: chart) {
 				.attr("transform", "translate(0," + h + ")")
 				.call(xAxis);
 
-			// 	gX.selectAll(".tick text")
-			// .call(wrap, xBand.bandwidth())
+			const wrap = (
+				text: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>,
+				width: number
+			) => {
+				text.each(function () {
+					let text = d3.select(this);
+					let words = text.text().split(/\s+/).reverse();
+					let word;
+					let line: string[] = [];
+					let lineNumber = 0;
+					const lineHeight = 1.1; // ems
+					const y = text.attr("y");
+					const dy = parseFloat(text.attr("dy"));
+					let tspan = text
+						.text(null)
+						.append("tspan")
+						.attr("x", 0)
+						.attr("y", y)
+						.attr("dy", dy + "em");
+					while ((word = words.pop())) {
+						line.push(word);
+						tspan.text(line.join(" "));
+						if (tspan.node()!.getComputedTextLength() > width) {
+							line.pop();
+							tspan.text(line.join(" "));
+							line = [word];
+							tspan = text
+								.append("tspan")
+								.attr("x", 0)
+								.attr("y", y)
+								.attr("dy", ++lineNumber * lineHeight + dy + "em")
+								.text(word);
+						}
+					}
+				});
+			};
+
+			gX.selectAll(".tick text").call(wrap, xBand.bandwidth());
 			//append y axis
 			const yAxis = d3.axisLeft(scaleY);
 			const gY = svg.append("g").attr("class", "axis y-axis").call(yAxis);
@@ -135,6 +184,49 @@ export default function Chart({symbol}: chart) {
 				.append("g")
 				.attr("class", "chartBody")
 				.attr("clip-path", "url(#clip)");
+
+			//tooltips
+			const tooltip = d3
+				.select(svgEle.current) // cambiar para que se haga un append del svg
+				.append("div")
+				// .style("opacity", 0)
+				// .attr("id", "div_template")
+				.style("opacity", 0)
+				.attr("class", "tooltip-stock")
+				.style("background-color", "var(--color)")
+				.style("border-radius", "5px")
+				.style("padding", "5px")
+				.style("position", "absolute")
+				.style("top", "0px")
+				.style("left", "0px")
+				.style("display", "block")
+				.style("z-index", 99999999999999);
+
+			const mouseover = function (this: SVGRectElement, e: any, d: number) {
+				console.log("over");
+				tooltip.style("opacity", 1).style("display", "block");
+			};
+			const mousemove = function (this: SVGRectElement, e: any, d: number) {
+				console.log(d3.pointer(e), e.pageX);
+				tooltip
+					// 	.html(
+					// 		`<ul>
+					//   <li>Date: ${"bla"}</li>
+					//   <li></li>
+					//   <li></li>
+					//   <li></li>
+					//   <li></li>
+					//   </ul>`
+					// 	)
+					.html("The exact value of<br>this cell is: " + d)
+					.style("left", d3.pointer(e)[0] + 40 + "px")
+					.style("top", d3.pointer(e)[1] + 20 + "px")
+					.style("background-color", "red");
+			};
+			const mouseleave = function (this: SVGRectElement, e: any, d: number) {
+				console.log("leave");
+				tooltip.style("opacity", 0).style("display", "none");
+			};
 
 			// draw rectangles
 			const candels = chartBody
@@ -151,9 +243,10 @@ export default function Chart({symbol}: chart) {
 						: scaleY(Math.min(d, charData.close[i])) -
 						  scaleY(Math.max(d, charData.close[i]))
 				)
-				.style("fill", (d, i) =>
-					d <= charData.close[i] ? "var(--green)" : "var(--red)"
-				);
+				.style("fill", (d, i) => (d <= charData.close[i] ? "var(--green)" : "var(--red)"))
+				.on("mouseover", mouseover)
+				.on("mousemove", mousemove)
+				.on("mouseleave", mouseleave);
 
 			// draw high and low
 			const stems = chartBody
@@ -185,20 +278,30 @@ export default function Chart({symbol}: chart) {
 				const xScaleZ = t.rescaleX(scaleX);
 				const yScaleZ = t.rescaleY(scaleY);
 
+				const ld: number[] = [];
 				gX.call(
 					d3.axisBottom(xScaleZ).tickFormat((d, i) => {
-						const dd = parseFloat(d.toString());
-						if (!Number.isInteger(dd) || dd < 0 || dd > charData.timestamp.length - 1) {
-							return "";
+						const dd = parseInt(d.toString());
+						const date = new Date(charData.timestamp[dd]);
+						let lastDate;
+						if (i > 0) {
+							lastDate = new Date(charData.timestamp[ld[ld.length - 1]]);
+						}
+						ld.push(dd);
+						const day = date.getDate();
+						if (dd > 0 && dd < charData.timestamp.length) {
+							return lastDate &&
+								lastDate.getFullYear() === date.getFullYear() &&
+								lastDate.getMonth() === date.getMonth()
+								? day.toString()
+								: month[date.getMonth()] + " " + date.getFullYear().toString();
 						} else {
-							const date = new Date(charData.timestamp[dd]);
-							const day = date.getDate();
-							return day === 1
-								? month[date.getMonth()] + " / " + date.getFullYear().toString()
-								: day.toString();
+							return "";
 						}
 					})
 				);
+
+				gX.selectAll(".tick text").call(wrap, xBand.bandwidth());
 
 				gY.call(d3.axisLeft(yScaleZ));
 
@@ -239,12 +342,13 @@ export default function Chart({symbol}: chart) {
 			//.on("zoom.end", zoomed);
 
 			svg.call(zoom);
+			// .call(zoom.transform, d3.zoomIdentity.translate(w - 100, 0).scale(10));
 		}
 	}, [charData, grafDimensions]);
 
 	return (
 		<>
-			<svg className="stock-b-graf" ref={svgEle}></svg>
+			<div className="stock-b-graf" ref={svgEle}></div>
 		</>
 	);
 }
