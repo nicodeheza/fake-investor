@@ -161,6 +161,7 @@ p {
 	font-size: 13px;
 	line-height: 15px;
 	/* border: solid; */
+	text-align: left;
 }
 .stock-chart-btn {
 	width: 100%;
