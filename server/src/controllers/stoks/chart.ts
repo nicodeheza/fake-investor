@@ -191,7 +191,7 @@ export default async function chart(req: Request, res: Response) {
 		const d: number[] = resData.chart.result[0].timestamp;
 
 		// console.log(d.length);
-		d.forEach((date: number) => console.log(new Date(date * 1000)));
+		// d.forEach((date: number) => console.log(new Date(date * 1000)));
 		const jsTimestamp = d.map((n) => n * 1000);
 		const resObj = {
 			timestamp: jsTimestamp,

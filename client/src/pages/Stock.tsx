@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import {API_URL} from "../consts";
 import Arrow from "../svg/Arrow";
 import Chart from "../components/stock/Chart";
+import roundTow from "../helpers/roundRow";
 import "./stock.css";
 
 type data = {
@@ -19,19 +20,19 @@ type data = {
 	userProp: boolean;
 };
 
-const m: data = {
-	longName: "dsgsfhdg",
-	regularMarketPrice: 453,
-	regularMarketChange: 345,
-	regularMarketChangePercent: 345,
-	regularMarketPreviousClose: 345,
-	regularMarketOpen: 345,
-	regularMarketDayRange: "45-46",
-	fiftyTwoWeekRange: "56-67",
-	regularMarketVolume: 60000,
-	averageDailyVolume3Month: 60000,
-	userProp: false
-};
+// const m: data = {
+// 	longName: "dsgsfhdg",
+// 	regularMarketPrice: 453,
+// 	regularMarketChange: 345,
+// 	regularMarketChangePercent: 345,
+// 	regularMarketPreviousClose: 345,
+// 	regularMarketOpen: 345,
+// 	regularMarketDayRange: "45-46",
+// 	fiftyTwoWeekRange: "56-67",
+// 	regularMarketVolume: 60000,
+// 	averageDailyVolume3Month: 60000,
+// 	userProp: false
+// };
 
 export default function Stock() {
 	const params = useParams();
@@ -39,19 +40,15 @@ export default function Stock() {
 
 	useEffect(() => {
 		console.log(params.symbol);
-		// fetch(`${API_URL}/stock/${params.symbol}`)
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		console.log(data);
-		// 		setData(data);
-		// 	})
-		// 	.catch((err) => console.log(err));
-		setData(m);
+		fetch(`${API_URL}/stock/${params.symbol}`)
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+				setData(data);
+			})
+			.catch((err) => console.log(err));
+		// setData(m);
 	}, [params]);
-
-	function roundTow(num: number) {
-		return Math.round((num + Number.EPSILON) * 100) / 100;
-	}
 
 	return (
 		<>

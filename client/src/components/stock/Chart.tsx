@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../../consts";
-import chartMock from "./chartMock";
+// import chartMock from "./chartMock";
 import * as d3 from "d3";
+import roundTow from "../../helpers/roundRow";
 
 interface chart {
 	symbol: string | undefined;
@@ -19,29 +20,173 @@ interface grafDim {
 	h: number;
 }
 
+enum chartL {
+	d5,
+	m1,
+	m3,
+	m6,
+	y1,
+	y2,
+	y5
+}
+
 export default function Chart({symbol}: chart) {
-	const [charData, setChartData] = useState<chartData | undefined>();
+	const [chartData, setChartData] = useState<chartData | undefined>();
 	const [grafDimensions, setGrafDimensions] = useState<grafDim | undefined>();
-	const svgEle = useRef<HTMLDivElement>(null!);
+	const [allData, setAllData] = useState<chartData | undefined>();
+	const [chartLength, setChertLength] = useState(chartL.m1);
+	const svgDiv = useRef<HTMLDivElement>(null!);
 	//fetch Data
 	useEffect(() => {
 		if (symbol) {
-			// fetch(`${API_URL}/stock/chart/${symbol}`)
-			// 	.then((res) => res.json())
-			// 	.then((data) => {
-			// 		console.log(data);
-			// 		setChartData(data);
-			// 	})
-			// 	.catch((err) => console.log(err));
-			setChartData(chartMock);
+			fetch(`${API_URL}/stock/chart/${symbol}`)
+				.then((res) => res.json())
+				.then((data) => {
+					console.log(data);
+					setAllData(data);
+				})
+				.catch((err) => console.log(err));
+			// setAllData(chartMock);
 		}
 	}, [symbol]);
+
+	//set data length
+	useEffect(() => {
+		if (allData) {
+			const l = allData.timestamp.length;
+			switch (chartLength) {
+				case chartL.d5:
+					if (l >= 5) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-5),
+							close: allData.close.slice(-5),
+							open: allData.open.slice(-5),
+							high: allData.high.slice(-5),
+							low: allData.low.slice(-5)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.m1:
+					if (l >= 21) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-21),
+							close: allData.close.slice(-21),
+							open: allData.open.slice(-21),
+							high: allData.high.slice(-21),
+							low: allData.low.slice(-21)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.m3:
+					if (l >= 63) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-63),
+							close: allData.close.slice(-63),
+							open: allData.open.slice(-63),
+							high: allData.high.slice(-63),
+							low: allData.low.slice(-63)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.m6:
+					if (l >= 126) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-126),
+							close: allData.close.slice(-126),
+							open: allData.open.slice(-126),
+							high: allData.high.slice(-126),
+							low: allData.low.slice(-126)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.y1:
+					if (l >= 252) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-252),
+							close: allData.close.slice(-252),
+							open: allData.open.slice(-252),
+							high: allData.high.slice(-252),
+							low: allData.low.slice(-252)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.y2:
+					if (l >= 504) {
+						setChartData({
+							timestamp: allData.timestamp.slice(-504),
+							close: allData.close.slice(-504),
+							open: allData.open.slice(-504),
+							high: allData.high.slice(-504),
+							low: allData.low.slice(-504)
+						});
+					} else {
+						setChartData({
+							timestamp: [...allData.timestamp],
+							close: [...allData.close],
+							open: [...allData.open],
+							high: [...allData.high],
+							low: [...allData.low]
+						});
+					}
+					break;
+				case chartL.y5:
+					setChartData({
+						timestamp: [...allData.timestamp],
+						close: [...allData.close],
+						open: [...allData.open],
+						high: [...allData.high],
+						low: [...allData.low]
+					});
+					break;
+			}
+		}
+	}, [chartLength, allData]);
 
 	//get svg dimensions
 	useEffect(() => {
 		function getDim() {
-			const width = svgEle.current.clientWidth;
-			const height = svgEle.current.clientHeight;
+			const width = svgDiv.current.clientWidth;
+			const height = svgDiv.current.clientHeight;
 			setGrafDimensions({
 				w: width,
 				h: height
@@ -54,7 +199,7 @@ export default function Chart({symbol}: chart) {
 
 	//create chart
 	useEffect(() => {
-		if (charData && grafDimensions !== undefined) {
+		if (chartData && grafDimensions !== undefined) {
 			const month = [
 				"Jan",
 				"Feb",
@@ -73,12 +218,13 @@ export default function Chart({symbol}: chart) {
 			const w = grafDimensions.w - margin.left - margin.right;
 			const h = grafDimensions.h - margin.top - margin.bottom;
 
-			d3.select("#chartG").remove();
-			d3.select(".tooltip-stock").remove();
+			d3.select("#stock-svg").remove();
+			d3.select("#tt-stock").remove();
 
 			const svg = d3
-				.select(svgEle.current)
+				.select(svgDiv.current)
 				.append("svg")
+				.attr("id", "stock-svg")
 				.attr("width", w + margin.left + margin.right)
 				.attr("height", h + margin.top + margin.bottom)
 				.append("g")
@@ -86,19 +232,21 @@ export default function Chart({symbol}: chart) {
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			//x scales
+			const bandArr = [...chartData.timestamp];
+			bandArr.unshift(chartData.timestamp[0] - 1000 * 60 * 60 * 24);
 			const scaleX = d3
 				.scaleLinear()
-				.domain([-1, charData.timestamp.length])
+				.domain([-1, chartData.timestamp.length])
 				.range([0, w]);
 			const xBand = d3
 				.scaleBand()
-				.domain(charData.timestamp.map((d) => new Date(d).toString()))
+				.domain(chartData.timestamp.map((d) => new Date(d).toString()))
 				.range([0, w])
 				.padding(0.15);
 
 			//y scale
-			const yMax = d3.max(charData.high) || 0;
-			const yMin = d3.min(charData.low) || 0;
+			const yMax = d3.max(chartData.high) || 0;
+			const yMin = d3.min(chartData.low) || 0;
 			const scaleY = d3.scaleLinear().domain([yMin, yMax]).range([h, 0]).nice();
 
 			//pointer rect
@@ -113,25 +261,30 @@ export default function Chart({symbol}: chart) {
 
 			//append x axis
 			const ld: number[] = [];
-			const xAxis = d3.axisBottom(scaleX).tickFormat((d, i) => {
+			let nextDate: number | undefined;
+			const formatTick = (d: d3.AxisDomain, i: number) => {
 				const dd = parseInt(d.toString());
-				const date = new Date(charData.timestamp[dd]);
+				const date = new Date(chartData.timestamp[dd]);
 				let lastDate;
 				if (i > 0) {
-					lastDate = new Date(charData.timestamp[ld[ld.length - 1]]);
+					lastDate = new Date(chartData.timestamp[ld[ld.length - 1]]);
 				}
 				ld.push(dd);
 				const day = date.getDate();
-				if (dd > 0 && dd < charData.timestamp.length) {
+				if (dd >= 0 && dd < chartData.timestamp.length && nextDate !== day) {
+					nextDate = day;
 					return lastDate &&
 						lastDate.getFullYear() === date.getFullYear() &&
 						lastDate.getMonth() === date.getMonth()
 						? day.toString()
 						: month[date.getMonth()] + " " + date.getFullYear().toString();
 				} else {
+					nextDate = day;
+
 					return "";
 				}
-			});
+			};
+			const xAxis = d3.axisBottom(scaleX).tickFormat(formatTick);
 			var gX = svg
 				.append("g")
 				.attr("class", "axis x-axis") //Assign "axis" class
@@ -187,63 +340,60 @@ export default function Chart({symbol}: chart) {
 
 			//tooltips
 			const tooltip = d3
-				.select(svgEle.current) // cambiar para que se haga un append del svg
+				.select(svgDiv.current) // cambiar para que se haga un append del svg
 				.append("div")
-				// .style("opacity", 0)
-				// .attr("id", "div_template")
 				.style("opacity", 0)
+				.attr("id", "tt-stock")
 				.attr("class", "tooltip-stock")
-				.style("background-color", "var(--color)")
-				.style("border-radius", "5px")
-				.style("padding", "5px")
-				.style("position", "absolute")
 				.style("top", "0px")
-				.style("left", "0px")
-				.style("display", "block")
-				.style("z-index", 99999999999999);
+				.style("left", "0px");
 
 			const mouseover = function (this: SVGRectElement, e: any, d: number) {
-				console.log("over");
 				tooltip.style("opacity", 1).style("display", "block");
 			};
+			const tooltipIndex = d3.local<number>();
 			const mousemove = function (this: SVGRectElement, e: any, d: number) {
-				console.log(d3.pointer(e), e.pageX);
+				const date = new Date(chartData.timestamp[tooltipIndex.get(this)!]);
+				const showDate = `${
+					month[date.getMonth()]
+				}/${date.getDate()}/${date.getFullYear()}`;
 				tooltip
-					// 	.html(
-					// 		`<ul>
-					//   <li>Date: ${"bla"}</li>
-					//   <li></li>
-					//   <li></li>
-					//   <li></li>
-					//   <li></li>
-					//   </ul>`
-					// 	)
-					.html("The exact value of<br>this cell is: " + d)
-					.style("left", d3.pointer(e)[0] + 40 + "px")
-					.style("top", d3.pointer(e)[1] + 20 + "px")
-					.style("background-color", "red");
+					.html(
+						`<ul>
+					  <li><b>Date:</b> ${showDate}</li><br>
+					  <li><b>Low:</b> ${roundTow(chartData.low[tooltipIndex.get(this)!])}</li><br>
+					  <li><b>High:</b> ${roundTow(chartData.high[tooltipIndex.get(this)!])}</li><br>
+					  <li><b>Open:</b> ${roundTow(d)}</li><br>
+					  <li><b>Close:</b> ${roundTow(chartData.close[tooltipIndex.get(this)!])}</li>
+					  </ul>`
+					)
+					// .html("The exact value of<br>this cell is: " + d)
+					.style("left", d3.pointer(e)[0] + 50 + "px")
+					.style("top", d3.pointer(e)[1] + 20 + "px");
 			};
 			const mouseleave = function (this: SVGRectElement, e: any, d: number) {
-				console.log("leave");
 				tooltip.style("opacity", 0).style("display", "none");
 			};
 
 			// draw rectangles
 			const candels = chartBody
 				.selectAll(".candel")
-				.data(charData.open)
+				.data(chartData.open)
 				.enter()
 				.append("rect")
 				.attr("x", (d, i) => scaleX(i) - xBand.bandwidth())
-				.attr("y", (d, i) => scaleY(Math.max(d, charData.close[i])))
+				.attr("y", (d, i) => scaleY(Math.max(d, chartData.close[i])))
 				.attr("width", xBand.bandwidth())
-				.attr("height", (d, i) =>
-					d === charData.close[i]
+				.attr("height", function (d, i) {
+					tooltipIndex.set(this, i);
+					return d === chartData.close[i]
 						? 1
-						: scaleY(Math.min(d, charData.close[i])) -
-						  scaleY(Math.max(d, charData.close[i]))
+						: scaleY(Math.min(d, chartData.close[i])) -
+								scaleY(Math.max(d, chartData.close[i]));
+				})
+				.style("fill", (d, i) =>
+					d <= chartData.close[i] ? "var(--green)" : "var(--red)"
 				)
-				.style("fill", (d, i) => (d <= charData.close[i] ? "var(--green)" : "var(--red)"))
 				.on("mouseover", mouseover)
 				.on("mousemove", mousemove)
 				.on("mouseleave", mouseleave);
@@ -251,15 +401,15 @@ export default function Chart({symbol}: chart) {
 			// draw high and low
 			const stems = chartBody
 				.selectAll("g.line")
-				.data(charData.high)
+				.data(chartData.high)
 				.enter()
 				.append("line")
 				.attr("x1", (d, i) => scaleX(i) - xBand.bandwidth() / 2)
 				.attr("x2", (d, i) => scaleX(i) - xBand.bandwidth() / 2)
 				.attr("y1", (d) => scaleY(d))
-				.attr("y2", (d, i) => scaleY(charData.low[i]))
+				.attr("y2", (d, i) => scaleY(chartData.low[i]))
 				.style("stroke", (d, i) =>
-					charData.open[i] <= charData.close[i] ? "var(--green)" : "var(--red)"
+					chartData.open[i] <= chartData.close[i] ? "var(--green)" : "var(--red)"
 				);
 
 			//clip
@@ -278,28 +428,9 @@ export default function Chart({symbol}: chart) {
 				const xScaleZ = t.rescaleX(scaleX);
 				const yScaleZ = t.rescaleY(scaleY);
 
-				const ld: number[] = [];
-				gX.call(
-					d3.axisBottom(xScaleZ).tickFormat((d, i) => {
-						const dd = parseInt(d.toString());
-						const date = new Date(charData.timestamp[dd]);
-						let lastDate;
-						if (i > 0) {
-							lastDate = new Date(charData.timestamp[ld[ld.length - 1]]);
-						}
-						ld.push(dd);
-						const day = date.getDate();
-						if (dd > 0 && dd < charData.timestamp.length) {
-							return lastDate &&
-								lastDate.getFullYear() === date.getFullYear() &&
-								lastDate.getMonth() === date.getMonth()
-								? day.toString()
-								: month[date.getMonth()] + " " + date.getFullYear().toString();
-						} else {
-							return "";
-						}
-					})
-				);
+				// const ld: number[] = [];
+				// let nextDate: number | undefined;
+				gX.call(d3.axisBottom(xScaleZ).tickFormat(formatTick));
 
 				gX.selectAll(".tick text").call(wrap, xBand.bandwidth());
 
@@ -308,12 +439,12 @@ export default function Chart({symbol}: chart) {
 				candels
 					.attr("x", (d, i) => xScaleZ(i) - (xBand.bandwidth() * t.k) / 2)
 					.attr("width", xBand.bandwidth() * t.k)
-					.attr("y", (d, i) => yScaleZ(Math.max(charData.open[i], charData.close[i])))
+					.attr("y", (d, i) => yScaleZ(Math.max(chartData.open[i], chartData.close[i])))
 					.attr("height", (d, i) =>
-						charData.open[i] === charData.close[i]
+						chartData.open[i] === chartData.close[i]
 							? 1
-							: yScaleZ(Math.min(charData.open[i], charData.close[i])) -
-							  yScaleZ(Math.max(charData.open[i], charData.close[i]))
+							: yScaleZ(Math.min(chartData.open[i], chartData.close[i])) -
+							  yScaleZ(Math.max(chartData.open[i], chartData.close[i]))
 					);
 
 				stems.attr(
@@ -324,8 +455,8 @@ export default function Chart({symbol}: chart) {
 					"x2",
 					(d, i) => xScaleZ(i) - xBand.bandwidth() / 2 + xBand.bandwidth() * 0.5
 				);
-				stems.attr("y1", (d, i) => yScaleZ(charData.high[i]));
-				stems.attr("y2", (d, i) => yScaleZ(charData.low[i]));
+				stems.attr("y1", (d, i) => yScaleZ(chartData.high[i]));
+				stems.attr("y2", (d, i) => yScaleZ(chartData.low[i]));
 			};
 
 			const extent: [[number, number], [number, number]] = [
@@ -339,16 +470,58 @@ export default function Chart({symbol}: chart) {
 				.translateExtent(extent)
 				.extent(extent)
 				.on("zoom", zoomed);
-			//.on("zoom.end", zoomed);
 
 			svg.call(zoom);
-			// .call(zoom.transform, d3.zoomIdentity.translate(w - 100, 0).scale(10));
 		}
-	}, [charData, grafDimensions]);
+	}, [chartData, grafDimensions]);
 
 	return (
-		<>
-			<div className="stock-b-graf" ref={svgEle}></div>
-		</>
+		<div>
+			<div className="stock-chart-btn">
+				<button
+					style={chartLength === chartL.d5 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.d5)}
+				>
+					5D
+				</button>
+				<button
+					style={chartLength === chartL.m1 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.m1)}
+				>
+					1M
+				</button>
+				<button
+					style={chartLength === chartL.m3 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.m3)}
+				>
+					3M
+				</button>
+				<button
+					style={chartLength === chartL.m6 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.m6)}
+				>
+					6M
+				</button>
+				<button
+					style={chartLength === chartL.y1 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.y1)}
+				>
+					1Y
+				</button>
+				<button
+					style={chartLength === chartL.y2 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.y2)}
+				>
+					2Y
+				</button>
+				<button
+					style={chartLength === chartL.y5 ? {background: "var(--color)"} : {}}
+					onClick={(e) => setChertLength(chartL.y5)}
+				>
+					5Y
+				</button>
+			</div>
+			<div className="stock-b-graf" ref={svgDiv}></div>
+		</div>
 	);
 }
