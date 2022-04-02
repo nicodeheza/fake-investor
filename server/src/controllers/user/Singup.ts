@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../../models/User";
 import {createHash} from "../../functions/password";
+import passport from "passport";
 
 export default async function Singup(req: express.Request, res: express.Response) {
 	try {
@@ -20,7 +21,16 @@ export default async function Singup(req: express.Request, res: express.Response
 		console.log("user save: ", saveUser);
 
 		if (saveUser === "success") {
-			// log in
+			passport.authenticate("local", (err, user, info) => {
+				if (err) throw err;
+				if (!user) res.json({message: "No User Exists"});
+				else {
+					req.logIn(user, (err) => {
+						if (err) throw err;
+						res.json({userName: user.user_name});
+					});
+				}
+			})(req, res);
 		} else {
 			if (saveUser.includes("Users.email")) {
 				res

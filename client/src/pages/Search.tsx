@@ -138,7 +138,10 @@ export default function Search() {
 		setTimeOut(
 			setTimeout(() => {
 				if (query) {
-					fetch(`${API_URL}/stock/search/${query}`)
+					fetch(`${API_URL}/stock/search/${query}`, {
+						method: "GET",
+						credentials: "include"
+					})
 						.then((res) => res.json())
 						.then((data) => {
 							console.log(data);

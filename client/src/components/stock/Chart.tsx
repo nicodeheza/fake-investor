@@ -39,7 +39,10 @@ export default function Chart({symbol}: chart) {
 	//fetch Data
 	useEffect(() => {
 		if (symbol) {
-			fetch(`${API_URL}/stock/chart/${symbol}`)
+			fetch(`${API_URL}/stock/chart/${symbol}`, {
+				method: "GET",
+				credentials: "include"
+			})
 				.then((res) => res.json())
 				.then((data) => {
 					console.log(data);

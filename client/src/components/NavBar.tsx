@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {UseUserName} from "../context/UserContext";
 import MenuBar from "../svg/MenuBar";
@@ -10,8 +10,24 @@ export default function NavBar() {
 	const {userName, setUserName} = UseUserName();
 	const [navOpen, setNavOpen] = useState(false);
 
+	useEffect(() => {
+		fetch(`${API_URL}/user/auth`, {
+			method: "GET",
+			credentials: "include"
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				// console.log(data);
+				setUserName(data.userName);
+			})
+			.catch((err) => console.log(err));
+	}, [setUserName]);
+
 	function logOut() {
-		fetch(`${API_URL}/user/logout`)
+		fetch(`${API_URL}/user/logout`, {
+			method: "GET",
+			credentials: "include"
+		})
 			.then((res) => res.json())
 			.then((data) => setUserName(data.userName))
 			.catch((err) => console.log(err));

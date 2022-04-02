@@ -40,7 +40,10 @@ export default function Stock() {
 
 	useEffect(() => {
 		console.log(params.symbol);
-		fetch(`${API_URL}/stock/${params.symbol}`)
+		fetch(`${API_URL}/stock/${params.symbol}`, {
+			method: "GET",
+			credentials: "include"
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				console.log(data);

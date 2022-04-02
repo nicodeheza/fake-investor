@@ -1,20 +1,32 @@
 import {Request, Response} from "express";
 import fetch from "node-fetch";
+import {redisClient} from "../../redis/redisConn";
 
 export default async function stockProfile(req: Request, res: Response) {
+	const redisKey = `stockProfile=${req.params.symbol}`;
+	let data;
 	try {
-		const response = await fetch(
-			`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${req.params.symbol}`,
-			{
-				method: "GET",
-				headers: {
-					"x-api-key": process.env.YF_API_KEY || "",
-					"Content-Type": "application/json"
+		const cashData = await redisClient.get(redisKey);
+		console.log(cashData);
+		if (!cashData) {
+			const response = await fetch(
+				`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${req.params.symbol}`,
+				{
+					method: "GET",
+					headers: {
+						"x-api-key": process.env.YF_API_KEY || "",
+						"Content-Type": "application/json"
+					}
 				}
-			}
-		);
-		const resData = await response.json();
-		const data = resData.quoteResponse.result[0];
+			);
+			const resData = await response.json();
+			data = resData.quoteResponse.result[0];
+			redisClient.setEx(redisKey, 60, JSON.stringify(data));
+			console.log("api");
+		} else {
+			data = JSON.parse(cashData);
+			console.log("redis");
+		}
 
 		const sendData = {
 			longName: data.longName,

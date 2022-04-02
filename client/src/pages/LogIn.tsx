@@ -20,7 +20,8 @@ export default function LogIn() {
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(formFields)
+			body: JSON.stringify(formFields),
+			credentials: "include"
 		})
 			.then((res) => res.json())
 			.then((data) => {

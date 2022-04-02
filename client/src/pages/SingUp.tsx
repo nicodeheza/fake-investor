@@ -1,5 +1,7 @@
 import {useState, FormEvent} from "react";
+import {useNavigate} from "react-router-dom";
 import {API_URL} from "../consts";
+import {UseUserName} from "../context/UserContext";
 import "./login-singup.css";
 
 type formFields = {
@@ -17,6 +19,8 @@ export default function SingUp() {
 		repeat: ""
 	});
 	const [message, setMessage] = useState("");
+	const {setUserName} = UseUserName();
+	const navigate = useNavigate();
 
 	function submit(e: FormEvent) {
 		e.preventDefault();
@@ -30,13 +34,17 @@ export default function SingUp() {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify(formFields)
+				body: JSON.stringify(formFields),
+				credentials: "include"
 			})
 				.then((res) => res.json())
 				.then((data) => {
 					console.log(data);
 					if (data.message) {
 						setMessage(data.message);
+					} else if (data.userName) {
+						setUserName(data.userName);
+						navigate("/portfolio");
 					}
 				})
 				.catch((err) => console.log(err));
