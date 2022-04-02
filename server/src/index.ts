@@ -8,6 +8,7 @@ import {createClient} from "redis";
 import connectRedis from "connect-redis";
 import createTables from "./db/tables";
 import passportConfig from "./middelwares/passaportConfig";
+// import {redisClient} from "./redis/redisConn";
 
 const RedisStore = connectRedis(session);
 

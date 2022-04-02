@@ -1,13 +1,13 @@
 import {Request, Response} from "express";
 import fetch from "node-fetch";
-import {redisClient} from "../../redis/redisConn";
+import {redisClientCache} from "../../redis/redisConn";
 
 export default async function stockProfile(req: Request, res: Response) {
 	const redisKey = `stockProfile=${req.params.symbol}`;
 	let data;
 	try {
-		const cashData = await redisClient.get(redisKey);
-		console.log(cashData);
+		const cashData = await redisClientCache.get(redisKey);
+		// console.log(cashData);
 		if (!cashData) {
 			const response = await fetch(
 				`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${req.params.symbol}`,
@@ -21,7 +21,7 @@ export default async function stockProfile(req: Request, res: Response) {
 			);
 			const resData = await response.json();
 			data = resData.quoteResponse.result[0];
-			redisClient.setEx(redisKey, 60, JSON.stringify(data));
+			redisClientCache.setEx(redisKey, 3600, JSON.stringify(data));
 			console.log("api");
 		} else {
 			data = JSON.parse(cashData);
@@ -41,7 +41,6 @@ export default async function stockProfile(req: Request, res: Response) {
 			averageDailyVolume3Month: data.averageDailyVolume3Month,
 			userProp: false
 		};
-		// console.log(sendData);
 		res.status(200).json(sendData);
 	} catch (err) {
 		console.log(err);

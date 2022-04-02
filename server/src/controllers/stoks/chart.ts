@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import fetch from "node-fetch";
+import {redisClientCache} from "../../redis/redisConn";
 
 const m = {
 	chart: {
@@ -174,18 +175,29 @@ const m = {
 
 export default async function chart(req: Request, res: Response) {
 	const ticker = req.params.symbol.toUpperCase();
+	const redisKey = `stockChart=${ticker}`;
+	let resData;
 	try {
-		const response = await fetch(
-			`https://yfapi.net/v8/finance/chart/${ticker}?range=5y&region=US&interval=1d&lang=en`,
-			{
-				method: "GET",
-				headers: {
-					"x-api-key": process.env.YF_API_KEY || "",
-					"Content-Type": "application/json"
+		const redisData = await redisClientCache.get(redisKey);
+		if (!redisData) {
+			const response = await fetch(
+				`https://yfapi.net/v8/finance/chart/${ticker}?range=5y&region=US&interval=1d&lang=en`,
+				{
+					method: "GET",
+					headers: {
+						"x-api-key": process.env.YF_API_KEY || "",
+						"Content-Type": "application/json"
+					}
 				}
-			}
-		);
-		const resData = await response.json();
+			);
+			resData = await response.json();
+
+			await redisClientCache.setEx(redisKey, 3600, JSON.stringify(resData));
+			console.log("stock chart api");
+		} else {
+			resData = JSON.parse(redisData);
+			console.log("stock chart redis");
+		}
 		// console.log(resData);
 		// const resData = m;
 		const d: number[] = resData.chart.result[0].timestamp;

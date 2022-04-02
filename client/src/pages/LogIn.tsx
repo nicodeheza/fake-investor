@@ -7,6 +7,7 @@ import {API_URL} from "../consts";
 export default function LogIn() {
 	const navigate = useNavigate();
 	const {setUserName} = UseUserName();
+	const [loginErr, setLoginErr] = useState(false);
 	const [formFields, setFormFields] = useState({
 		email: "",
 		password: ""
@@ -14,6 +15,7 @@ export default function LogIn() {
 
 	function submit(e: FormEvent) {
 		e.preventDefault();
+		setLoginErr(false);
 
 		fetch(`${API_URL}/user/login`, {
 			method: "POST",
@@ -29,7 +31,10 @@ export default function LogIn() {
 				setUserName(data.userName);
 				navigate("/portfolio");
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				setLoginErr(true);
+			});
 	}
 
 	return (
@@ -71,6 +76,9 @@ export default function LogIn() {
 						<div className="form-btn-container">
 							<button className="form-btn">Log in</button>
 						</div>
+						{loginErr ? (
+							<p className="form-message">Incorrect email or password</p>
+						) : null}
 					</form>
 				</div>
 			</main>
