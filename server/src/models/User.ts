@@ -20,7 +20,8 @@ const User = {
 					hash,
 					salt
 				]);
-			return "success";
+			// console.log(rows.toString());
+			return ["success", (<{[key: string]: any}>rows).insertId];
 		} catch (err: any) {
 			// console.log(err);
 			return err.sqlMessage;
@@ -32,6 +33,19 @@ const User = {
 				.promise()
 				.query("SELECT * FROM Users WHERE user_id=?", [id]);
 			return rows;
+		} catch (err) {
+			console.log(err);
+		}
+	},
+	addStockOwnership: async (userId: number, stockId: number, amount: number) => {
+		try {
+			await db
+				.promise()
+				.query(`INSERT INTO Ownerships(user_id, stock_id, quantity) VALUES (?, ?, ?)`, [
+					userId,
+					stockId,
+					amount
+				]);
 		} catch (err) {
 			console.log(err);
 		}

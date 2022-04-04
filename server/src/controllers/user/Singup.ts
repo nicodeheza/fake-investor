@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../../models/User";
+import Stock from "../../models/Stock";
 import {createHash} from "../../functions/password";
 import passport from "passport";
 
@@ -19,8 +20,11 @@ export default async function Singup(req: express.Request, res: express.Response
 			hashSalt.salt
 		);
 		console.log("user save: ", saveUser);
+		//saveUser[1]
 
-		if (saveUser === "success") {
+		if (saveUser[0] === "success") {
+			const fudId = await Stock.getIdFromSymbol("FUD");
+			await User.addStockOwnership(saveUser[1], fudId, 1000000);
 			passport.authenticate("local", (err, user, info) => {
 				if (err) throw err;
 				if (!user) res.json({message: "No User Exists"});
