@@ -10,7 +10,7 @@ const Stock = {
 		);
 
 		// console.log((<{stock_id: number}[]>rows)[0].stock_id);
-		return (<{stock_id: number}[]>rows)[0].stock_id;
+		return (<{stock_id: number}[]>rows)[0]?.stock_id;
 	}
 };
 

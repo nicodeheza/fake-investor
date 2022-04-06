@@ -1,6 +1,8 @@
 import {Request, Response} from "express";
 import fetch from "node-fetch";
 import {redisClientCache} from "../../redis/redisConn";
+import Stock from "../../models/Stock";
+import User from "../../models/User";
 
 export default async function stockProfile(req: Request, res: Response) {
 	const redisKey = `stockProfile=${req.params.symbol}`;
@@ -28,6 +30,20 @@ export default async function stockProfile(req: Request, res: Response) {
 			console.log("redis");
 		}
 
+		let userHave: number | boolean;
+		// console.log("user: ", req.user);
+		if (req.user) {
+			const stockId = await Stock.getIdFromSymbol(req.params.symbol);
+			if (stockId) {
+				const user: any = req.user;
+				const userId: number = user[0].user_id;
+				userHave = (await User.getStockHolding(userId, stockId)) || 0;
+			} else {
+				userHave = 0;
+			}
+		} else {
+			userHave = false;
+		}
 		const sendData = {
 			longName: data.longName,
 			regularMarketPrice: data.regularMarketPrice,
@@ -39,7 +55,7 @@ export default async function stockProfile(req: Request, res: Response) {
 			fiftyTwoWeekRange: data.fiftyTwoWeekRange,
 			regularMarketVolume: data.regularMarketVolume,
 			averageDailyVolume3Month: data.averageDailyVolume3Month,
-			userProp: false
+			userProp: userHave!
 		};
 		res.status(200).json(sendData);
 	} catch (err) {

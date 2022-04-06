@@ -49,6 +49,35 @@ const User = {
 		} catch (err) {
 			console.log(err);
 		}
+	},
+	getStockHolding: async (userId: number, stockId: number) => {
+		try {
+			const [rows] = await db.promise().query(
+				`
+			SELECT quantity FROM Ownerships WHERE user_id=? AND stock_id=?
+			`,
+				[userId, stockId]
+			);
+
+			return (<{quantity: number}[]>rows)[0]?.quantity;
+		} catch (err) {
+			console.log(err);
+		}
+	},
+	getAllStock: async (userId: number) => {
+		try {
+			const [rows] = await db.promise().query(
+				`
+			SELECT Stocks.symbol, Ownerships.quantity FROM Stocks 
+			JOIN Ownerships ON Stocks.stock_id=Ownerships.stock_id
+			WHERE Ownerships.user_id= ?
+			`,
+				[userId]
+			);
+			return rows;
+		} catch (err) {
+			console.log(err);
+		}
 	}
 };
 

@@ -3,8 +3,11 @@ import {useParams} from "react-router-dom";
 import {API_URL} from "../consts";
 import Arrow from "../svg/Arrow";
 import Chart from "../components/stock/Chart";
-import roundTow from "../helpers/roundRow";
+import roundTow from "../helpers/roundTow";
 import "./stock.css";
+import {UseUserName} from "../context/UserContext";
+import Btn from "../components/Btn";
+import BuyCard, {buyCard} from "../components/stock/BuyCard";
 
 type data = {
 	longName: string;
@@ -17,26 +20,15 @@ type data = {
 	fiftyTwoWeekRange: string;
 	regularMarketVolume: number;
 	averageDailyVolume3Month: number;
-	userProp: boolean;
+	userProp: number | boolean;
 };
-
-// const m: data = {
-// 	longName: "dsgsfhdg",
-// 	regularMarketPrice: 453,
-// 	regularMarketChange: 345,
-// 	regularMarketChangePercent: 345,
-// 	regularMarketPreviousClose: 345,
-// 	regularMarketOpen: 345,
-// 	regularMarketDayRange: "45-46",
-// 	fiftyTwoWeekRange: "56-67",
-// 	regularMarketVolume: 60000,
-// 	averageDailyVolume3Month: 60000,
-// 	userProp: false
-// };
 
 export default function Stock() {
 	const params = useParams();
 	const [data, setData] = useState<data | undefined>();
+	const [showBuy, setShowBuy] = useState(false);
+	const [buyProps, setBuyProps] = useState<buyCard | undefined>();
+	const {userName} = UseUserName();
 
 	useEffect(() => {
 		console.log(params.symbol);
@@ -51,7 +43,33 @@ export default function Stock() {
 			})
 			.catch((err) => console.log(err));
 		// setData(m);
+
+		fetch(`${API_URL}/stock/buy-card`, {
+			method: "GET",
+			credentials: "include"
+		});
 	}, [params]);
+
+	function getBuyProps() {
+		fetch(`${API_URL}/stock/buy-card`, {
+			method: "GET",
+			credentials: "include"
+		})
+			.then((res) => res.json())
+			.then((d) => {
+				console.log(d);
+				setBuyProps({
+					name: `${data!.longName} (${params.symbol})`,
+					price: data!.regularMarketPrice,
+					moneyAvailable: d.fud,
+					portfolio: d.portfolioV,
+					currentHolding: data!.userProp as number,
+					setShowBuy
+				});
+				setShowBuy(true);
+			})
+			.catch((err) => console.log(err));
+	}
 
 	return (
 		<>
@@ -118,6 +136,21 @@ export default function Stock() {
 							<Chart symbol={params.symbol} />
 						</div>
 					</div>
+					<div className="stock-b-btn-container">
+						{userName ? (
+							<Btn text="Buy" padding="10px 40px" onClick={() => getBuyProps()} />
+						) : null}
+					</div>
+					{showBuy ? (
+						<BuyCard
+							name={buyProps!.name}
+							price={buyProps!.price}
+							moneyAvailable={buyProps!.moneyAvailable}
+							portfolio={buyProps!.portfolio}
+							currentHolding={buyProps!.currentHolding}
+							setShowBuy={buyProps!.setShowBuy}
+						/>
+					) : null}
 				</div>
 			) : (
 				<div></div>

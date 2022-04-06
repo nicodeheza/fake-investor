@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../../consts";
 // import chartMock from "./chartMock";
 import * as d3 from "d3";
-import roundTow from "../../helpers/roundRow";
+import roundTow from "../../helpers/roundTow";
 
 interface chart {
 	symbol: string | undefined;

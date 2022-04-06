@@ -1,0 +1,70 @@
+.buyCard-container {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.buyCard {
+	/* border: solid; */
+	border-radius: 20px;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	background-color: var(--bk-light);
+	max-width: 450px;
+	padding: 20px;
+	margin: 0px 30px;
+}
+.buyCard h2 {
+	margin: 0px;
+	padding: 0px;
+	/* border: solid; */
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+.buyCard ul {
+	list-style: none;
+	padding: 0px;
+}
+.buyCard li {
+	/* margin: 0px; */
+	/* border: solid; */
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.buyCard li:last-child {
+	border: none;
+	margin: 40px 0px;
+}
+
+.buyCard-total {
+	font-weight: bolder;
+	font-size: 1.7rem !important;
+}
+
+.buyCard-input-container {
+	display: flex;
+}
+.buyCard-input-container input {
+	width: 7rem;
+	margin-right: 5px;
+	padding-left: 5px;
+	border: solid 1px var(--text);
+	background-color: var(--bk-light);
+	color: var(--text);
+	border-radius: 10px;
+}
+
+.buyCard-btn-container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
