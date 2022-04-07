@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import roundTow from "../../helpers/roundTow";
 import Btn from "../Btn";
+import {API_URL} from "../../consts";
 import "./buyCard.css";
+import {useNavigate} from "react-router-dom";
 
 export interface buyCard {
 	name: string;
@@ -30,6 +32,8 @@ export default function BuyCard({
 }: buyCard) {
 	const [amount, setAmount] = useState(0);
 	const [results, setResults] = useState<res>();
+	const [message, setMessage] = useState("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		// if (amount > moneyAvailable / price) setAmount(Math.floor(moneyAvailable / price));
@@ -42,6 +46,37 @@ export default function BuyCard({
 			debit: roundTow(amo * price)
 		});
 	}, [amount, currentHolding, portfolio, price]);
+
+	function buy() {
+		setMessage("");
+		if (!isNaN(amount) && amount > 0) {
+			const matchArr = name.match(/\(([a-zA-Z]+)\)/);
+			const symbol = matchArr![1];
+			const fullName = name.split("(")[0].trim();
+			// console.log({amount, symbol, fullName});
+
+			fetch(`${API_URL}/stock/buy`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include",
+				body: JSON.stringify({amount, symbol, name: fullName, price})
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.message === "ok") {
+						navigate("/portfolio");
+					} else {
+						setMessage("Error");
+						console.log(data.message);
+					}
+				})
+				.catch((err) => console.log(err));
+		} else {
+			setMessage("The transaction amount must be greater than 0");
+		}
+	}
 
 	return (
 		<div className="buyCard-container">
@@ -92,7 +127,7 @@ export default function BuyCard({
 					</li>
 				</ul>
 				<div className="buyCard-btn-container">
-					<Btn text="Buy" padding="10px 30px" />
+					<Btn text="Buy" padding="10px 30px" onClick={() => buy()} />
 					<Btn
 						text="Cancel"
 						padding="10px 30px"
@@ -100,6 +135,7 @@ export default function BuyCard({
 						onClick={() => setShowBuy(false)}
 					/>
 				</div>
+				{message ? <p className="error-message">{message}</p> : null}
 			</div>
 		</div>
 	);
