@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import Btn from "../Btn";
 import "./buyCard.css";
 import roundTow from "../../helpers/roundTow";
+import {API_URL} from "../../consts";
+import {useNavigate} from "react-router-dom";
 
 interface sellCard {
 	name: string;
@@ -26,6 +28,8 @@ export default function SellCard({
 }: sellCard) {
 	const [sellAmount, setSellAmount] = useState(0);
 	const [showData, setShowData] = useState<res>();
+	const [message, setMessage] = useState("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const amo = isNaN(sellAmount) ? 0 : sellAmount;
@@ -38,6 +42,41 @@ export default function SellCard({
 			mony
 		});
 	}, [sellAmount, currentHolding, price, portfolio]);
+
+	function sell() {
+		setMessage("");
+		if (sellAmount > 0) {
+			const matchArr = name.match(/\(([a-zA-Z]+)\)/);
+			const symbol = matchArr![1];
+			const fullName = name.split("(")[0].trim();
+
+			fetch(`${API_URL}/stock/sell`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					symbol,
+					name: fullName,
+					amount: sellAmount,
+					price
+				})
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.message === "ok") {
+						navigate("/portfolio");
+					} else {
+						setMessage("Error");
+						console.log(data.message);
+					}
+				})
+				.catch((err) => console.log(err));
+		} else {
+			setMessage("The transaction amount must be greater than 0");
+		}
+	}
 
 	return (
 		<div className="buyCard-container">
@@ -73,7 +112,7 @@ export default function SellCard({
 					</li>
 				</ul>
 				<div className="buyCard-btn-container">
-					<Btn text="Sell" padding="10px 30px" />
+					<Btn text="Sell" padding="10px 30px" onClick={() => sell()} />
 					<Btn
 						text="Cancel"
 						padding="10px 30px"
@@ -81,6 +120,7 @@ export default function SellCard({
 						onClick={() => setShow(false)}
 					/>
 				</div>
+				{message ? <p className="error-message">{message}</p> : null}
 			</div>
 		</div>
 	);

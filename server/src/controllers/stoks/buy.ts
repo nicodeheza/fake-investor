@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import getPortfolioVal from "../../functions/getPortfolioVal";
+import updateOrCreateToDayHistory from "../../functions/updateOrCreateToDayHistory";
 import Stock from "../../models/Stock";
 import User from "../../models/User";
 
@@ -24,19 +25,7 @@ export default async function buy(req: Request, res: Response) {
 		//subtract fud
 		await User.subtractFud(userId, price * amount);
 		//create or update user history point
-		let historyPoint: any = await User.getToDayHistory(userId);
-		let historyId: number;
-		const portfolioVal = await getPortfolioVal(userId);
-		const liquid = await User.getFudQuantity(userId);
-		if (!historyPoint) {
-			console.log("not history");
-			const h = await User.addHistory(userId, portfolioVal!, liquid!);
-			historyId = (h as {[key: string]: any}).insertId;
-		} else {
-			console.log(historyPoint);
-			historyId = historyPoint.history_id;
-			await User.updateHistory(historyId, portfolioVal!, liquid!);
-		}
+		const historyId = await updateOrCreateToDayHistory(userId);
 		//create transaction
 		await User.addTransaction(historyId, stockId!, true, price, amount);
 		res.status(200).json({message: "ok"});

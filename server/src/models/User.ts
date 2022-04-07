@@ -110,6 +110,24 @@ const User = {
 			console.log(err);
 		}
 	},
+	addFud: async (userId: number, amount: number) => {
+		try {
+			const [row] = await db.promise().execute(`
+			SELECT stock_id FROM Stocks WHERE symbol="FUD"
+			`);
+			const fudId = (<{stock_id: number}[]>row)[0].stock_id;
+			console.log(fudId);
+			await db.promise().query(
+				`
+			UPDATE Ownerships  SET quantity= quantity + ?
+			WHERE user_id=? AND stock_id=?
+			`,
+				[amount, userId, fudId]
+			);
+		} catch (err) {
+			console.log(err);
+		}
+	},
 	getToDayHistory: async (userId: number) => {
 		try {
 			const [rows] = await db.promise().query(
