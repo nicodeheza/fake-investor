@@ -59,7 +59,7 @@ const User = {
 				[userId, stockId]
 			);
 
-			return (<{quantity: number}[]>rows)[0]?.quantity;
+			return parseInt((<{quantity: string}[]>rows)[0]?.quantity);
 		} catch (err) {
 			console.log(err);
 		}

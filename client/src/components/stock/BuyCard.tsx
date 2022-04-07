@@ -11,7 +11,7 @@ export interface buyCard {
 	moneyAvailable: number;
 	portfolio: number;
 	currentHolding: number;
-	setShowBuy: (value: React.SetStateAction<boolean>) => void;
+	setShow: (value: React.SetStateAction<boolean>) => void;
 }
 
 interface res {
@@ -28,7 +28,7 @@ export default function BuyCard({
 	moneyAvailable,
 	portfolio,
 	currentHolding,
-	setShowBuy
+	setShow
 }: buyCard) {
 	const [amount, setAmount] = useState(0);
 	const [results, setResults] = useState<res>();
@@ -132,7 +132,7 @@ export default function BuyCard({
 						text="Cancel"
 						padding="10px 30px"
 						color="var(--red)"
-						onClick={() => setShowBuy(false)}
+						onClick={() => setShow(false)}
 					/>
 				</div>
 				{message ? <p className="error-message">{message}</p> : null}

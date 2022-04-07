@@ -8,6 +8,7 @@ import "./stock.css";
 import {UseUserName} from "../context/UserContext";
 import Btn from "../components/Btn";
 import BuyCard, {buyCard} from "../components/stock/BuyCard";
+import SellCard from "../components/stock/SellCard";
 
 type data = {
 	longName: string;
@@ -27,7 +28,8 @@ export default function Stock() {
 	const params = useParams();
 	const [data, setData] = useState<data | undefined>();
 	const [showBuy, setShowBuy] = useState(false);
-	const [buyProps, setBuyProps] = useState<buyCard | undefined>();
+	const [showSell, setShowSell] = useState(false);
+	const [cardProps, setCardsProps] = useState<buyCard | undefined>();
 	const {userName} = UseUserName();
 
 	useEffect(() => {
@@ -50,7 +52,7 @@ export default function Stock() {
 		});
 	}, [params]);
 
-	function getBuyProps() {
+	function getCardProps(buy: boolean) {
 		fetch(`${API_URL}/stock/buy-card`, {
 			method: "GET",
 			credentials: "include"
@@ -58,15 +60,27 @@ export default function Stock() {
 			.then((res) => res.json())
 			.then((d) => {
 				console.log(d);
-				setBuyProps({
-					name: `${data!.longName} (${params.symbol})`,
-					price: data!.regularMarketPrice,
-					moneyAvailable: d.fud,
-					portfolio: d.portfolioV,
-					currentHolding: data!.userProp as number,
-					setShowBuy
-				});
-				setShowBuy(true);
+				if (buy) {
+					setCardsProps({
+						name: `${data!.longName} (${params.symbol})`,
+						price: data!.regularMarketPrice,
+						moneyAvailable: d.fud,
+						portfolio: d.portfolioV,
+						currentHolding: data!.userProp as number,
+						setShow: setShowBuy
+					});
+					setShowBuy(true);
+				} else {
+					setCardsProps({
+						name: `${data!.longName} (${params.symbol})`,
+						price: data!.regularMarketPrice,
+						moneyAvailable: d.fud,
+						portfolio: d.portfolioV,
+						currentHolding: data!.userProp as number,
+						setShow: setShowSell
+					});
+					setShowSell(true);
+				}
 			})
 			.catch((err) => console.log(err));
 	}
@@ -138,17 +152,34 @@ export default function Stock() {
 					</div>
 					<div className="stock-b-btn-container">
 						{userName ? (
-							<Btn text="Buy" padding="10px 40px" onClick={() => getBuyProps()} />
+							<Btn text="Buy" padding="10px 40px" onClick={() => getCardProps(true)} />
+						) : null}
+						{userName && data.userProp ? (
+							<Btn
+								text="Sell"
+								padding="10px 40px"
+								color="var(--red)"
+								onClick={() => getCardProps(false)}
+							/>
 						) : null}
 					</div>
 					{showBuy ? (
 						<BuyCard
-							name={buyProps!.name}
-							price={buyProps!.price}
-							moneyAvailable={buyProps!.moneyAvailable}
-							portfolio={buyProps!.portfolio}
-							currentHolding={buyProps!.currentHolding}
-							setShowBuy={buyProps!.setShowBuy}
+							name={cardProps!.name}
+							price={cardProps!.price}
+							moneyAvailable={cardProps!.moneyAvailable}
+							portfolio={cardProps!.portfolio}
+							currentHolding={cardProps!.currentHolding}
+							setShow={cardProps!.setShow}
+						/>
+					) : null}
+					{showSell ? (
+						<SellCard
+							name={cardProps!.name}
+							price={cardProps!.price}
+							portfolio={cardProps!.portfolio}
+							currentHolding={cardProps!.currentHolding}
+							setShow={cardProps!.setShow}
 						/>
 					) : null}
 				</div>

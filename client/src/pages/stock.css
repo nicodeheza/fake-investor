@@ -57,7 +57,7 @@ p {
 	align-items: center;
 	justify-content: space-around;
 	margin-top: 80px;
-	padding-bottom: 50px;
+	padding-bottom: 20px;
 }
 
 /* -----------------n-data------------------------------ */
@@ -179,10 +179,10 @@ p {
 
 .stock-b-btn-container {
 	/* border: solid; */
-	width: 50%;
+	width: 40%;
 	margin: 0px 45px;
-	margin-bottom: 80px;
+	padding-bottom: 30px;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: center;
 }
