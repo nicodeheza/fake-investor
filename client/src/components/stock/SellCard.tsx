@@ -4,6 +4,7 @@ import "./buyCard.css";
 import roundTow from "../../helpers/roundTow";
 import {API_URL} from "../../consts";
 import {useNavigate} from "react-router-dom";
+import {UseUserName} from "../../context/UserContext";
 
 interface sellCard {
 	name: string;
@@ -30,6 +31,7 @@ export default function SellCard({
 	const [showData, setShowData] = useState<res>();
 	const [message, setMessage] = useState("");
 	const navigate = useNavigate();
+	const {setUserName} = UseUserName();
 
 	useEffect(() => {
 		const amo = isNaN(sellAmount) ? 0 : sellAmount;
@@ -67,6 +69,9 @@ export default function SellCard({
 				.then((data) => {
 					if (data.message === "ok") {
 						navigate("/portfolio");
+					} else if (data.userName === "") {
+						setUserName("");
+						navigate("/");
 					} else {
 						setMessage("Error");
 						console.log(data.message);

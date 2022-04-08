@@ -24,7 +24,7 @@ export default async function Singup(req: express.Request, res: express.Response
 
 		if (saveUser[0] === "success") {
 			const fudId = await Stock.getIdFromSymbol("FUD");
-			await User.addStockOwnership(saveUser[1], fudId, 1000000);
+			await User.addStockOwnership(saveUser[1], fudId!, 1000000);
 			passport.authenticate("local", (err, user, info) => {
 				if (err) throw err;
 				if (!user) res.json({message: "No User Exists"});

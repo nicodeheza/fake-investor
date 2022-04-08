@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {API_URL} from "../consts";
 import Arrow from "../svg/Arrow";
 import Chart from "../components/stock/Chart";
@@ -30,7 +30,8 @@ export default function Stock() {
 	const [showBuy, setShowBuy] = useState(false);
 	const [showSell, setShowSell] = useState(false);
 	const [cardProps, setCardsProps] = useState<buyCard | undefined>();
-	const {userName} = UseUserName();
+	const {userName, setUserName} = UseUserName();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		console.log(params.symbol);
@@ -60,6 +61,10 @@ export default function Stock() {
 			.then((res) => res.json())
 			.then((d) => {
 				console.log(d);
+				if (d.userName === "") {
+					setUserName("");
+					navigate("/");
+				}
 				if (buy) {
 					setCardsProps({
 						name: `${data!.longName} (${params.symbol})`,

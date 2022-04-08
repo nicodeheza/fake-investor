@@ -4,6 +4,7 @@ import Btn from "../Btn";
 import {API_URL} from "../../consts";
 import "./buyCard.css";
 import {useNavigate} from "react-router-dom";
+import {UseUserName} from "../../context/UserContext";
 
 export interface buyCard {
 	name: string;
@@ -34,6 +35,7 @@ export default function BuyCard({
 	const [results, setResults] = useState<res>();
 	const [message, setMessage] = useState("");
 	const navigate = useNavigate();
+	const {setUserName} = UseUserName();
 
 	useEffect(() => {
 		// if (amount > moneyAvailable / price) setAmount(Math.floor(moneyAvailable / price));
@@ -67,6 +69,9 @@ export default function BuyCard({
 				.then((data) => {
 					if (data.message === "ok") {
 						navigate("/portfolio");
+					} else if (data.userName === "") {
+						setUserName("");
+						navigate("/");
 					} else {
 						setMessage("Error");
 						console.log(data.message);

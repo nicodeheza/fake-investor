@@ -8,5 +8,5 @@ export default function checkAuthenticated(
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.json({userName: ""});
+	res.status(401).json({userName: ""});
 }
