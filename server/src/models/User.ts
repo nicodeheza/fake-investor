@@ -68,7 +68,7 @@ const User = {
 		try {
 			const [rows] = await db.promise().query(
 				`
-			SELECT Stocks.symbol, Ownerships.quantity FROM Stocks 
+			SELECT Stocks.symbol, Stocks.stock_name, Ownerships.quantity FROM Stocks 
 			JOIN Ownerships ON Stocks.stock_id=Ownerships.stock_id
 			WHERE Ownerships.user_id= ?
 			`,

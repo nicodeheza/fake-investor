@@ -1,8 +1,6 @@
 import {Request, Response} from "express";
-// import getStocksPrice from "../../functions/getStocksPrice";
 import User from "../../models/User";
 import getPortfolioVal from "../../functions/getPortfolioVal";
-// import Stock from "../../models/Stock";
 
 export default async function buyCard(req: Request, res: Response) {
 	try {

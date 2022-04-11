@@ -1,6 +1,11 @@
 import fetch from "node-fetch";
 import {redisClientCache} from "../redis/redisConn";
 
+interface stockVal {
+	price: number;
+	change: number;
+}
+
 function sliceIntoChunks(arr: any[], chunkSize: number) {
 	const res = [];
 	for (let i = 0; i < arr.length; i += chunkSize) {
@@ -10,14 +15,17 @@ function sliceIntoChunks(arr: any[], chunkSize: number) {
 	return res;
 }
 
-export default async function getStocksPrice(symbols: string[]) {
+export default async function getStocksData(symbols: string[]) {
 	const stocksValues = await Promise.all(
 		symbols.map(async (symbol) => {
-			if (symbol === "FUD") return {symbol, price: 1};
+			if (symbol === "FUD") return {symbol, price: 1, change: ""};
 			const redisKey = `stockValue=${symbol}`;
 			const res = await redisClientCache.get(redisKey);
-			const price: number | null = res === null ? null : parseFloat(res);
-			return {symbol, price};
+
+			if (res === null) return {symbol, price: null, change: null};
+
+			const vals: stockVal = JSON.parse(res);
+			return {symbol, price: vals?.price, change: vals?.change};
 		})
 	);
 
@@ -44,12 +52,20 @@ export default async function getStocksPrice(symbols: string[]) {
 		);
 		resArr = resArr.flat();
 		resArr = resArr.map((obj) => {
-			return {symbol: obj.symbol, price: obj.regularMarketPrice};
+			return {
+				symbol: obj.symbol,
+				price: obj.regularMarketPrice,
+				change: obj.regularMarketChangePercent
+			};
 		});
 
 		await Promise.all(
 			resArr.map((obj) =>
-				redisClientCache.setEx(`stockValue=${obj.symbol}`, 3600, obj.price.toString())
+				redisClientCache.setEx(
+					`stockValue=${obj.symbol}`,
+					3600,
+					JSON.stringify({price: obj.price, change: obj.change})
+				)
 			)
 		);
 
