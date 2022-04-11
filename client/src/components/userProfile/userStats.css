@@ -1,0 +1,40 @@
+.portfolio-stats {
+	width: 35%;
+}
+
+.portfolio-stats table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.portfolio-stats table td {
+	border-bottom: solid 1px var(--text);
+	padding: 10px 0px;
+}
+.portfolio-stats-col1 {
+	text-align: left;
+}
+.portfolio-stats-col2 {
+	text-align: center;
+}
+.portfolio-stats-col3 {
+	text-align: right;
+}
+
+.portfolio-stats-arrow {
+	width: 20px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.portfolio-stats-btn-container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 30px;
+}
+@media (max-width: 1000px) {
+	.portfolio-stats {
+		width: 100%;
+	}
+}

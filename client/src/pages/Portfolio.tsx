@@ -1,6 +1,5 @@
 import UserStats from "../components/userProfile/UserStats";
 import {UseUserName} from "../context/UserContext";
-
 import "./portfolio.css";
 
 export default function Portfolio() {

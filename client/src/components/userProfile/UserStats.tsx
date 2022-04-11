@@ -5,6 +5,9 @@ import {UseUserName} from "../../context/UserContext";
 import Btn from "../Btn";
 import Arrow from "../../svg/Arrow";
 import roundTow from "../../helpers/roundTow";
+
+import "./userStats.css";
+
 interface stat {
 	gainMony: number;
 	gainPer: number;
