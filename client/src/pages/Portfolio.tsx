@@ -1,16 +1,21 @@
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import UserStats, {stat} from "../components/userProfile/UserStats";
 import {API_URL} from "../consts";
 import {UseUserName} from "../context/UserContext";
 import Btn from "../components/Btn";
+import DkTable, {stockData} from "../components/userProfile/DkTable";
 import "./portfolio.css";
 
 export default function Portfolio() {
 	const {userName, setUserName} = UseUserName();
 	const [stats, setStats] = useState<stat>();
+	const [userStocks, setUserStoks] = useState<stockData[]>();
+	const [filteredStoks, setFilteredStoks] = useState<stockData[]>();
+	const [searchInput, setSearchInput] = useState<string>();
 	const navigate = useNavigate();
 
+	//get Stats
 	useEffect(() => {
 		fetch(`${API_URL}/user/userStats`, {
 			method: "GET",
@@ -27,6 +32,39 @@ export default function Portfolio() {
 			})
 			.catch((err) => console.log(err));
 	}, [navigate, setUserName]);
+
+	//get stock data
+	useEffect(() => {
+		fetch(`${API_URL}/user/stocks`, {
+			method: "GET",
+			credentials: "include"
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+				if (data.userName === "") {
+					setUserName("");
+					navigate("/");
+				}
+				setUserStoks(data);
+				setFilteredStoks(data);
+			})
+			.catch((err) => console.log(err));
+	}, [setUserName, navigate]);
+
+	function filterStoks(e: React.ChangeEvent<HTMLInputElement>) {
+		const input: string = e.target.value.toLocaleLowerCase();
+		setSearchInput(input);
+		if (userStocks) {
+			setFilteredStoks(
+				userStocks.filter(
+					(stock) =>
+						stock.symbol.toLocaleLowerCase().startsWith(input) ||
+						stock.fullName.toLocaleLowerCase().startsWith(input)
+				)
+			);
+		}
+	}
 
 	return (
 		<div className="portfolio">
@@ -60,6 +98,17 @@ export default function Portfolio() {
 					</div>
 				</div>
 				<div className="portfolio-chart"></div>
+			</div>
+			<div className="portfolio-user-stock">
+				<div className="portfolio-user-stock-title-search">
+					<h2>My Stocks</h2>
+					<input type="search" placeholder="Search..." onChange={(e) => filterStoks(e)} />
+				</div>
+				<div className="portfolio-user-stock-table">
+					{filteredStoks && stats ? (
+						<DkTable stoks={filteredStoks} portfolioTotal={stats.total} />
+					) : null}
+				</div>
 			</div>
 		</div>
 	);

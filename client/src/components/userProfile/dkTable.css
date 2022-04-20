@@ -1,0 +1,37 @@
+.dkTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.dkTable th {
+	border-bottom: solid 1px var(--text);
+	text-align: left;
+}
+
+.dkTable td {
+	padding: 10px 0px;
+	max-width: fit-content;
+}
+
+.dkTable-name-th {
+	margin-left: 20%;
+}
+.dkTable-price-th {
+	margin-left: 5%;
+}
+/* .dkTable-change-th {
+	text-align: left;
+} */
+.dkTable-quantity-th {
+	margin-left: 15%;
+}
+
+.dkTable-name-col div {
+	margin-left: 10%;
+}
+
+@media (max-width: 1000px) {
+	.dkTable {
+		display: none;
+	}
+}
