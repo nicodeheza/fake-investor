@@ -12,7 +12,6 @@ export default function Portfolio() {
 	const [stats, setStats] = useState<stat>();
 	const [userStocks, setUserStoks] = useState<stockData[]>();
 	const [filteredStoks, setFilteredStoks] = useState<stockData[]>();
-	const [searchInput, setSearchInput] = useState<string>();
 	const navigate = useNavigate();
 
 	//get Stats
@@ -54,7 +53,6 @@ export default function Portfolio() {
 
 	function filterStoks(e: React.ChangeEvent<HTMLInputElement>) {
 		const input: string = e.target.value.toLocaleLowerCase();
-		setSearchInput(input);
 		if (userStocks) {
 			setFilteredStoks(
 				userStocks.filter(
