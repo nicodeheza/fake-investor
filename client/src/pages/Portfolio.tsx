@@ -6,6 +6,7 @@ import {UseUserName} from "../context/UserContext";
 import Btn from "../components/Btn";
 import DkTable, {stockData} from "../components/userProfile/DkTable";
 import "./portfolio.css";
+import MbTable from "../components/userProfile/MbTable";
 
 export default function Portfolio() {
 	const {userName, setUserName} = UseUserName();
@@ -104,7 +105,10 @@ export default function Portfolio() {
 				</div>
 				<div className="portfolio-user-stock-table">
 					{filteredStoks && stats ? (
-						<DkTable stoks={filteredStoks} portfolioTotal={stats.total} />
+						<>
+							<DkTable stocks={filteredStoks} portfolioTotal={stats.total} />
+							<MbTable stocks={filteredStoks} portfolioTotal={stats.total} />
+						</>
 					) : null}
 				</div>
 			</div>

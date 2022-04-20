@@ -12,12 +12,12 @@ export interface stockData {
 	quaMon: number;
 }
 
-interface DkTableProps {
-	stoks: stockData[];
+export interface TableProps {
+	stocks: stockData[];
 	portfolioTotal: number;
 }
 
-export default function DkTable({stoks, portfolioTotal}: DkTableProps) {
+export default function DkTable({stocks, portfolioTotal}: TableProps) {
 	const navigate = useNavigate();
 
 	function getPerQua(quaMon: number) {
@@ -42,7 +42,7 @@ export default function DkTable({stoks, portfolioTotal}: DkTableProps) {
 					</th>
 					<th></th>
 				</tr>
-				{stoks.map((stock, i) => {
+				{stocks.map((stock, i) => {
 					if (stock.symbol !== "FUD") {
 						return (
 							<tr key={i}>
