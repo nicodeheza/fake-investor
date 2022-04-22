@@ -1,18 +1,10 @@
 import fetch from "node-fetch";
 import {redisClientCache} from "../redis/redisConn";
+import sliceIntoChunks from "./sliceIntoChunks";
 
 interface stockVal {
 	price: number;
 	change: number;
-}
-
-function sliceIntoChunks(arr: any[], chunkSize: number) {
-	const res = [];
-	for (let i = 0; i < arr.length; i += chunkSize) {
-		const chunk = arr.slice(i, i + chunkSize);
-		res.push(chunk);
-	}
-	return res;
 }
 
 export default async function getStocksData(symbols: string[]) {

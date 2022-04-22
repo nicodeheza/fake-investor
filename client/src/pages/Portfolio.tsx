@@ -23,12 +23,29 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
+				// console.log(data);
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");
 				}
 				setStats(data);
+			})
+			.catch((err) => console.log(err));
+	}, [navigate, setUserName]);
+
+	//get chart
+	useEffect(() => {
+		fetch(`${API_URL}/user/userChart`, {
+			method: "GET",
+			credentials: "include"
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+				if (data.userName === "") {
+					setUserName("");
+					navigate("/");
+				}
 			})
 			.catch((err) => console.log(err));
 	}, [navigate, setUserName]);
@@ -41,7 +58,7 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
+				// console.log(data);
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");

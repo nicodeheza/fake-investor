@@ -162,7 +162,7 @@ const User = {
 				const [rows] = await db.promise().query(
 					`
 				INSERT INTO History (user_id, portfolio_value, liquid, history_date)
-				VALUES (?,?,?)
+				VALUES (?,?,?,?)
 				`,
 					[userId, portfolioVal, liquid, date]
 				);
@@ -219,6 +219,106 @@ const User = {
 			`,
 				[historyId, stockId, buy, price, quantity]
 			);
+		} catch (err) {
+			console.log(err);
+		}
+	},
+	getChartHistoryPoints: async (userId: number) => {
+		const [data]: {[key: string]: any}[] = await db.promise().query(
+			`
+		SELECT History.history_date, 
+		History.portfolio_value, 
+		History.liquid,
+		Transactions.price,
+		Transactions.quantity,
+		Transactions.buy,
+		Stocks.symbol
+		FROM History LEFT JOIN 
+		(Transactions JOIN Stocks ON Transactions.stock_id= Stocks.stock_id)
+		ON History.history_id= Transactions.history_id
+		WHERE History.user_id=?;
+		`,
+			[userId]
+		);
+		const res: {
+			[key: string]: {
+				portfolioValue: number;
+				liquid: number;
+				transactions: {
+					price: number | null;
+					quantity: number | null;
+					buy: boolean | null;
+					symbol: string | null;
+				}[];
+			};
+		} = {};
+		data.forEach(
+			(d: {
+				history_date: Date;
+				portfolio_value: string;
+				liquid: string;
+				price: string | null;
+				quantity: number | null;
+				buy: number | null;
+				symbol: string | null;
+			}) => {
+				if (res[d.history_date.getTime()]) {
+					if (d.symbol !== null) {
+						res[d.history_date.getTime()].transactions.push({
+							price: parseFloat(d.price!),
+							quantity: d.quantity,
+							buy: d.buy === 1,
+							symbol: d.symbol
+						});
+					}
+				} else {
+					res[d.history_date.getTime()] = {
+						portfolioValue: parseFloat(d.portfolio_value),
+						liquid: parseFloat(d.liquid),
+						transactions:
+							d.symbol !== null
+								? [
+										{
+											price: parseFloat(d.price!),
+											quantity: d.quantity,
+											buy: d.buy === 1,
+											symbol: d.symbol
+										}
+								  ]
+								: []
+					};
+				}
+			}
+		);
+
+		// console.log(data[0].history_date.toString());
+		return res;
+	},
+	getTransactionFromDateToNow: async (userId: number, date: Date) => {
+		try {
+			const [data] = await db.promise().query(
+				`
+			SELECT History.history_date,
+			Stocks.symbol,
+			Transactions.buy,
+			Transactions.quantity FROM History 
+			JOIN (Transactions JOIN Stocks ON Transactions.stock_id= Stocks.stock_id) 
+			ON History.history_id= Transactions.history_id
+			WHERE History.user_id=? AND History.history_date > ?;
+			`,
+				[userId, date]
+			);
+			console.log(data);
+			return (
+				data as {
+					history_date: Date;
+					symbol: string;
+					buy: number;
+					quantity: number;
+				}[]
+			).map((obj) => {
+				return {...obj, buy: obj.buy === 1};
+			});
 		} catch (err) {
 			console.log(err);
 		}
