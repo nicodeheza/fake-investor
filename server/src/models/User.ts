@@ -245,10 +245,10 @@ const User = {
 				portfolioValue: number;
 				liquid: number;
 				transactions: {
-					price: number | null;
-					quantity: number | null;
-					buy: boolean | null;
-					symbol: string | null;
+					price: number;
+					quantity: number;
+					buy: boolean;
+					symbol: string;
 				}[];
 			};
 		} = {};
@@ -266,7 +266,7 @@ const User = {
 					if (d.symbol !== null) {
 						res[d.history_date.getTime()].transactions.push({
 							price: parseFloat(d.price!),
-							quantity: d.quantity,
+							quantity: d.quantity!,
 							buy: d.buy === 1,
 							symbol: d.symbol
 						});
@@ -280,7 +280,7 @@ const User = {
 								? [
 										{
 											price: parseFloat(d.price!),
-											quantity: d.quantity,
+											quantity: d.quantity!,
 											buy: d.buy === 1,
 											symbol: d.symbol
 										}
