@@ -7,6 +7,7 @@ import Btn from "../components/Btn";
 import DkTable, {stockData} from "../components/userProfile/DkTable";
 import "./portfolio.css";
 import MbTable from "../components/userProfile/MbTable";
+import UserChart from "../components/userProfile/UserChart";
 
 export default function Portfolio() {
 	const {userName, setUserName} = UseUserName();
@@ -29,23 +30,6 @@ export default function Portfolio() {
 					navigate("/");
 				}
 				setStats(data);
-			})
-			.catch((err) => console.log(err));
-	}, [navigate, setUserName]);
-
-	//get chart
-	useEffect(() => {
-		fetch(`${API_URL}/user/userChart`, {
-			method: "GET",
-			credentials: "include"
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data);
-				if (data.userName === "") {
-					setUserName("");
-					navigate("/");
-				}
 			})
 			.catch((err) => console.log(err));
 	}, [navigate, setUserName]);
@@ -113,7 +97,9 @@ export default function Portfolio() {
 						/>
 					</div>
 				</div>
-				<div className="portfolio-chart"></div>
+				<div className="portfolio-chart">
+					<UserChart />
+				</div>
 			</div>
 			<div className="portfolio-user-stock">
 				<div className="portfolio-user-stock-title-search">

@@ -27,7 +27,8 @@ export default async function getStockHistoricalPrice(
 
 		if (symbols.length > 0) {
 			const chunkSymbols = sliceIntoChunks(symbols, 10);
-			chunkSymbols.forEach(async (sym) => {
+			for (let i = 0; i < chunkSymbols.length; i++) {
+				const sym = chunkSymbols[i];
 				const response = await fetch(
 					`https://yfapi.net/v8/finance/spark?interval=1d&range=5y&symbols=${sym.join()}`,
 					{
@@ -39,6 +40,9 @@ export default async function getStockHistoricalPrice(
 					}
 				);
 				const fetchData = await response.json();
+				console.log("getStockHistoricalPrice api call");
+				// console.log("fetchData: ", fetchData);
+				//probar todo el controlador ya no puedo Limit Exceeded y ver como no exeder el limite
 				await Promise.all(
 					sym.map((s) => {
 						data[s] = fetchData[s];
@@ -49,7 +53,7 @@ export default async function getStockHistoricalPrice(
 						);
 					})
 				);
-			});
+			}
 		}
 		const resArr: {
 			symbol: string;
