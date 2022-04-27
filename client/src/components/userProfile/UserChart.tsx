@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../consts";
 import {UseUserName} from "../../context/UserContext";
 import * as d3 from "d3";
+import roundTow from "../../helpers/roundTow";
 
 interface userChartData {
 	[key: string]: {
@@ -80,8 +81,9 @@ export default function UserChart() {
 			const w = chartDimensions.w - margin.left - margin.right;
 			const h = chartDimensions.h - margin.top - margin.bottom;
 
-			//remove (todo)
+			//remove
 			d3.select("#user-svg").remove();
+			d3.select("#tt-user").remove();
 
 			const svg = d3
 				.select(userSvgDiv.current)
@@ -153,7 +155,43 @@ export default function UserChart() {
 				.attr("transform", "translate(0," + h + ")")
 				.call(xAxis);
 
-			//wrap (todo)
+			//wrap
+			const wrap = (
+				text: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>,
+				width: number
+			) => {
+				text.each(function () {
+					let text = d3.select(this);
+					let words = text.text().split(/\s+/).reverse();
+					let word;
+					let line: string[] = [];
+					let lineNumber = 0;
+					const lineHeight = 1.1; // ems
+					const y = text.attr("y");
+					const dy = parseFloat(text.attr("dy"));
+					let tspan = text
+						.text(null)
+						.append("tspan")
+						.attr("x", 0)
+						.attr("y", y)
+						.attr("dy", dy + "em");
+					while ((word = words.pop())) {
+						line.push(word);
+						tspan.text(line.join(" "));
+						if (tspan.node()!.getComputedTextLength() > width) {
+							line.pop();
+							tspan.text(line.join(" "));
+							line = [word];
+							tspan = text
+								.append("tspan")
+								.attr("x", 0)
+								.attr("y", y)
+								.attr("dy", ++lineNumber * lineHeight + dy + "em")
+								.text(word);
+						}
+					}
+				});
+			};
 
 			//append y axis
 			const yAxis = d3.axisLeft(scaleY);
@@ -165,6 +203,68 @@ export default function UserChart() {
 				.attr("clip-path", "url(#clip)");
 
 			//tooltips (todo)
+
+			const tooltip = d3
+				.select(userSvgDiv.current)
+				.append("div")
+				.style("opacity", 0)
+				.attr("id", "tt-user")
+				.attr("class", "tooltip-stock")
+				.style("top", "0px")
+				.style("left", "0px");
+
+			const mouseover = function (this: SVGCircleElement, e: any, d: string) {
+				tooltip.style("opacity", 1).style("display", "block");
+			};
+			const mousemoveChartDots = function (this: SVGCircleElement, e: any, d: string) {
+				const date = new Date(parseInt(d));
+				const TTdata = userChartData[d];
+				const showDate = `${
+					month[date.getMonth()]
+				}/${date.getDate()}/${date.getFullYear()}`;
+				tooltip
+					.html(
+						`<ul>
+				  <li><b>Date:</b> ${showDate}</li><br>
+				  <li><b>Portfolio Value:</b> ${roundTow(TTdata.portfolioValue)}</li><br>
+				  <li><b>Liquid:</b> ${roundTow(TTdata.liquid)}</li>
+				  </ul>`
+					)
+					.style("left", d3.pointer(e)[0] + 50 + "px")
+					.style("top", d3.pointer(e)[1] + 20 + "px");
+			};
+			const mousemoveDots = function (this: SVGCircleElement, e: any, d: string) {
+				const date = new Date(parseInt(d));
+				const TTdata = userChartData[d];
+				const showDate = `${
+					month[date.getMonth()]
+				}/${date.getDate()}/${date.getFullYear()}`;
+
+				const transactions: string[] = [];
+				TTdata.transactions.forEach((ele) => {
+					const s = `<li>
+					${ele.buy ? "Buy" : "Sell"} ${ele.quantity} ${ele.symbol} x ${roundTow(ele.price)}FUD
+					</li>`;
+					transactions.push(s);
+				});
+				tooltip
+					.html(
+						`
+					<h5 style="margin:5px 0px">Transactions</h5>
+					<p style="font-size: 12px">${showDate}</p><br>
+					<ul>
+					${transactions.join("<br>")}
+					</ul>
+					`
+					)
+					.style("left", d3.pointer(e)[0] + 70 + "px")
+					.style("bottom", " 10px")
+					.style("top", "inherit")
+					.style("height", "fit-content");
+			};
+			const mouseleave = function (this: SVGCircleElement, e: any, d: string) {
+				tooltip.style("opacity", 0).style("display", "none");
+			};
 
 			//draw line
 			const line = d3
@@ -180,11 +280,27 @@ export default function UserChart() {
 				.attr("stroke-width", 1.5)
 				.attr("d", line);
 
-			const dots = chartBody
-				.selectAll("circle")
+			const lineChartDots = chartBody
+				.selectAll(".chartDots")
 				.data(dataDates)
 				.enter()
 				.append("circle")
+				.attr("class", "chartDots")
+				.attr("fill", "var(--green)")
+				.attr("stroke", "none")
+				.attr("cx", (d, i) => scaleX(i) - xBand.bandwidth())
+				.attr("cy", (d) => scaleY(userChartData[d].portfolioValue))
+				.attr("r", "2px")
+				.on("mouseover", mouseover)
+				.on("mousemove", mousemoveChartDots)
+				.on("mouseleave", mouseleave);
+
+			const dots = chartBody
+				.selectAll(".transDots")
+				.data(dataDates)
+				.enter()
+				.append("circle")
+				.attr("class", "transDots")
 				.attr("fill", (d) =>
 					userChartData[d].transactions.length > 0 ? "var(--color)" : "none"
 				)
@@ -192,14 +308,67 @@ export default function UserChart() {
 				.attr("cx", (d, i) => scaleX(i) - xBand.bandwidth())
 				.attr("cy", h - 10)
 				.attr("r", "5px")
-				.exit();
+				.on("mouseover", mouseover)
+				.on("mousemove", mousemoveDots)
+				.on("mouseleave", mouseleave);
+
+			//clip
+			svg
+				.append("defs")
+				.append("clipPath")
+				.attr("id", "clip")
+				.append("rect")
+				.attr("width", w)
+				.attr("height", h);
 
 			// zoom todo
+			const zoomed = (e: any) => {
+				const t = e.transform;
+				const xScaleZ = t.rescaleX(scaleX);
+				const yScaleZ = t.rescaleY(scaleY);
+
+				gX.call(d3.axisBottom(xScaleZ).tickFormat(formatTick));
+
+				gX.selectAll(".tick text").call(wrap, xBand.bandwidth());
+
+				gY.call(d3.axisLeft(yScaleZ));
+
+				const lineZoom = d3
+					.line<string>()
+					.x((d, i) => xScaleZ(i) - xBand.bandwidth())
+					.y((d) => yScaleZ(userChartData[d].portfolioValue));
+
+				lineChart.attr("d", lineZoom);
+
+				lineChartDots
+					.attr("cx", (d, i) => xScaleZ(i) - xBand.bandwidth())
+					.attr("cy", (d) => yScaleZ(userChartData[d].portfolioValue))
+					.attr("r", () => `${t.k * 2}px`);
+
+				dots.attr("cx", (d, i) => xScaleZ(i) - xBand.bandwidth());
+			};
+
+			const extent: [[number, number], [number, number]] = [
+				[0, 0],
+				[w, h]
+			];
+			//let resizeTimer;
+			const zoom = d3
+				.zoom<SVGGElement, unknown>()
+				.scaleExtent([1, 100])
+				.translateExtent(extent)
+				.extent(extent)
+				.on("zoom", zoomed);
+
+			svg.call(zoom);
 		}
 	}, [chartDimensions, userChartData]);
 	return (
 		<>
-			<div ref={userSvgDiv} style={{width: "100%", height: "100%"}}></div>
+			<div
+				ref={userSvgDiv}
+				style={{width: "100%", height: "100%", position: "relative"}}
+			></div>
 		</>
 	);
 }

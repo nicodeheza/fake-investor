@@ -343,7 +343,7 @@ export default function Chart({symbol}: chart) {
 
 			//tooltips
 			const tooltip = d3
-				.select(svgDiv.current) // cambiar para que se haga un append del svg
+				.select(svgDiv.current)
 				.append("div")
 				.style("opacity", 0)
 				.attr("id", "tt-stock")
@@ -370,7 +370,6 @@ export default function Chart({symbol}: chart) {
 					  <li><b>Close:</b> ${roundTow(chartData.close[tooltipIndex.get(this)!])}</li>
 					  </ul>`
 					)
-					// .html("The exact value of<br>this cell is: " + d)
 					.style("left", d3.pointer(e)[0] + 50 + "px")
 					.style("top", d3.pointer(e)[1] + 20 + "px");
 			};
