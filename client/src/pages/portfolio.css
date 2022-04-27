@@ -80,7 +80,8 @@
 }
 
 .portfolio-user-stock-title-search input {
-	background-color: var(--bk-dark);
+	background: url(../../public/assets/searchIcon.svg) var(--bk-dark) 97% no-repeat;
+	background-size: 15px;
 	border: solid 1px var(--color);
 	border-radius: 20px;
 	width: 400px;
