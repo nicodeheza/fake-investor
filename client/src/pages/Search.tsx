@@ -1,125 +1,86 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {API_URL} from "../consts";
+import roundTow from "../helpers/roundTow";
 import "./search.css";
 
 type td = {
 	[key: string]: {
 		name: string;
+		symbol: string;
 		price: number;
-		variation: string;
+		variation: number;
 	};
-};
-
-const fillData: td = {
-	1: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	2: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	3: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	4: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	5: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	6: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	7: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	8: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "-0.35%"
-	},
-	9: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	},
-	10: {
-		name: "Lorem Ipsum(LOR)",
-		price: 124.2,
-		variation: "+0.35%"
-	}
 };
 
 const emptyData: td = {
 	1: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	2: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	3: {
+		symbol: "",
 		name: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	4: {
+		symbol: "",
 		name: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	5: {
+		symbol: "",
 		name: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	6: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	7: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	8: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	9: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	},
 	10: {
 		name: "",
+		symbol: "",
 		price: 0,
-		variation: ""
+		variation: 0
 	}
 };
 type searchRes = {[key: string]: string}[];
 
+//change component loading for page loading ?
+
 export default function Search() {
-	const [topData, setTopData] = useState(fillData);
+	const [topData, setTopData] = useState(emptyData);
 	const [timeOut, setTimeOut] = useState<null | ReturnType<typeof setTimeout>>(null);
 	const [searchResult, setSearchResult] = useState<searchRes | []>([]);
 	const [typing, setTyping] = useState(false);
@@ -157,6 +118,15 @@ export default function Search() {
 			}, 1000)
 		);
 	}
+
+	useEffect(() => {
+		fetch(`${API_URL}/stock/top`)
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+				setTopData(data);
+			});
+	}, []);
 	//change p for link and make link work
 
 	return (
@@ -195,28 +165,26 @@ export default function Search() {
 					<></>
 				)}
 				<div className="searchTopContainer">
-					<h2>Top 10 Stocks</h2>
+					<h2>Top 10 Popular Stocks</h2>
 					<table>
 						<tbody>
 							<tr>
 								<th>Ranking</th>
-								<th>Name</th>
+								<th className="top-name-title">Name</th>
 								<th>Price</th>
 								<th>Daily Variation</th>
 							</tr>
 							{Object.keys(topData).map((k, i) => (
 								<tr key={i}>
+									{/* <Link to={`stock/${topData[k].symbol}`}> */}
 									<td>{k}</td>
 									{topData[k].name ? (
 										<>
-											<td>{topData[k].name}</td>
+											<td className="top-name">{topData[k].name}</td>
 											<td>{topData[k].price}</td>
-											<td
-												className={
-													new RegExp("[+]").test(topData[k].variation) ? "green" : "red"
-												}
-											>
-												{topData[k].variation}
+											<td className={topData[k].variation >= 0 ? "green" : "red"}>
+												{topData[k].variation >= 0 ? "+" : null}
+												{roundTow(topData[k].variation)}
 											</td>
 										</>
 									) : (
@@ -232,6 +200,7 @@ export default function Search() {
 											</td>
 										</>
 									)}
+									{/* </Link> */}
 								</tr>
 							))}
 						</tbody>

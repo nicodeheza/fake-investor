@@ -30,6 +30,23 @@ const Stock = {
 		} catch (err) {
 			console.log(err);
 		}
+	},
+	getTopSymbols: async () => {
+		try {
+			const [rows] = await db.promise().execute(
+				`
+				SELECT Stocks.symbol,
+				Stocks.stock_name, 
+				SUM(Transactions.quantity) AS "buys-num"
+				FROM Stocks JOIN Transactions ON Stocks.stock_id= Transactions.stock_id
+				WHERE Transactions.buy=1 GROUP BY Stocks.symbol ORDER BY \`buys-num\` DESC LIMIT 10;
+				`
+			);
+
+			return rows;
+		} catch (err) {
+			console.log(err);
+		}
 	}
 };
 
