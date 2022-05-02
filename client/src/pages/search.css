@@ -90,6 +90,11 @@
 	text-align: left !important;
 	padding: 0px 5% !important;
 }
+.top-name a {
+	color: var(--text);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+}
 .top-name-title {
 	text-align: left !important;
 	padding: 0px 15% !important;

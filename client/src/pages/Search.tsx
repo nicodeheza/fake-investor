@@ -12,72 +12,16 @@ type td = {
 		variation: number;
 	};
 };
-
-const emptyData: td = {
-	1: {
+const emptyData: td = {};
+for (let i = 1; i <= 10; i++) {
+	emptyData[i] = {
 		name: "",
 		symbol: "",
 		price: 0,
 		variation: 0
-	},
-	2: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	},
-	3: {
-		symbol: "",
-		name: "",
-		price: 0,
-		variation: 0
-	},
-	4: {
-		symbol: "",
-		name: "",
-		price: 0,
-		variation: 0
-	},
-	5: {
-		symbol: "",
-		name: "",
-		price: 0,
-		variation: 0
-	},
-	6: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	},
-	7: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	},
-	8: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	},
-	9: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	},
-	10: {
-		name: "",
-		symbol: "",
-		price: 0,
-		variation: 0
-	}
-};
+	};
+}
 type searchRes = {[key: string]: string}[];
-
-//change component loading for page loading ?
 
 export default function Search() {
 	const [topData, setTopData] = useState(emptyData);
@@ -119,6 +63,7 @@ export default function Search() {
 		);
 	}
 
+	//get stock top
 	useEffect(() => {
 		fetch(`${API_URL}/stock/top`)
 			.then((res) => res.json())
@@ -127,7 +72,6 @@ export default function Search() {
 				setTopData(data);
 			});
 	}, []);
-	//change p for link and make link work
 
 	return (
 		<div className="searchContainer">
@@ -176,11 +120,12 @@ export default function Search() {
 							</tr>
 							{Object.keys(topData).map((k, i) => (
 								<tr key={i}>
-									{/* <Link to={`stock/${topData[k].symbol}`}> */}
 									<td>{k}</td>
 									{topData[k].name ? (
 										<>
-											<td className="top-name">{topData[k].name}</td>
+											<td className="top-name">
+												<Link to={`/stock/${topData[k].symbol}`}>{topData[k].name}</Link>
+											</td>
 											<td>{topData[k].price}</td>
 											<td className={topData[k].variation >= 0 ? "green" : "red"}>
 												{topData[k].variation >= 0 ? "+" : null}
@@ -200,7 +145,6 @@ export default function Search() {
 											</td>
 										</>
 									)}
-									{/* </Link> */}
 								</tr>
 							))}
 						</tbody>
