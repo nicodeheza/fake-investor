@@ -8,6 +8,7 @@ import DkTable, {stockData} from "../components/userProfile/DkTable";
 import "./portfolio.css";
 import MbTable from "../components/userProfile/MbTable";
 import UserChart from "../components/userProfile/UserChart";
+import Reset from "../components/userProfile/Reset";
 
 export default function Portfolio() {
 	const {userName, setUserName} = UseUserName();
@@ -114,6 +115,9 @@ export default function Portfolio() {
 						</>
 					) : null}
 				</div>
+			</div>
+			<div className="portfolio-reset">
+				<Reset />
 			</div>
 		</div>
 	);
