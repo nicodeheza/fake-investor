@@ -46,6 +46,7 @@ export default async function getStockHistoricalPrice(
 				await Promise.all(
 					sym.map((s) => {
 						data[s] = fetchData[s];
+						console.log("caching stockHistory");
 						return redisClientCache.setEx(
 							`stockHistory=${s}`,
 							60 * 12,
@@ -61,15 +62,27 @@ export default async function getStockHistoricalPrice(
 			price: number;
 		}[] = [];
 		stocksDate.forEach((obj) => {
-			const priceIndex = (data[obj.symbol].timestamp as number[]).findIndex((ele) => {
-				const eleDate = new Date(ele * 1000);
-				const objDate = new Date(obj.date);
-				return (
-					eleDate.getDate() === objDate.getDate() &&
-					eleDate.getMonth() === objDate.getMonth() &&
-					eleDate.getFullYear() === eleDate.getFullYear()
-				);
-			});
+			let priceIndex: number | undefined;
+			let prevDay = 0;
+			do {
+				priceIndex = (data[obj.symbol].timestamp as number[]).findIndex((ele) => {
+					const eleDate = new Date(ele * 1000);
+					const objDate = new Date(obj.date - prevDay);
+					return (
+						eleDate.getDate() === objDate.getDate() &&
+						eleDate.getMonth() === objDate.getMonth() &&
+						eleDate.getFullYear() === eleDate.getFullYear()
+					);
+				});
+				prevDay += 1000 * 60 * 60 * 24;
+			} while (
+				priceIndex < 0 &&
+				obj.date - prevDay >= data[obj.symbol].timestamp[0] * 1000
+			);
+
+			if (obj.date - prevDay < data[obj.symbol].timestamp[0] * 1000)
+				throw `ERROR: ${obj.symbol} date out of range ${obj.date}`;
+
 			resArr.push({
 				symbol: obj.symbol,
 				date: obj.date,

@@ -43,7 +43,7 @@ export default async function fillUserHistoryPoints(
 								};
 							})
 						);
-						// console.log("datePrice: ", datePrices);
+						console.log("datePrice: ", datePrices);
 						const totalStockPrice = datePrices?.reduce((prev, curr) => {
 							return prev + ownership![curr.symbol] * curr.price;
 						}, 0);
