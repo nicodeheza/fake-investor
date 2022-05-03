@@ -28,10 +28,22 @@ export default function SellCard({
 	setShow
 }: sellCard) {
 	const [sellAmount, setSellAmount] = useState(0);
+	const [inputDisplay, setInputDisplay] = useState("0");
 	const [showData, setShowData] = useState<res>();
 	const [message, setMessage] = useState("");
 	const navigate = useNavigate();
 	const {setUserName} = UseUserName();
+
+	function change(e: React.ChangeEvent<HTMLInputElement>) {
+		let sVal = e.target.value;
+		if (sVal === "") sVal = "0";
+		const val = parseInt(sVal);
+		setSellAmount(val > currentHolding ? Math.floor(currentHolding) : val);
+	}
+
+	useEffect(() => {
+		setInputDisplay(sellAmount.toString());
+	}, [sellAmount]);
 
 	useEffect(() => {
 		const amo = isNaN(sellAmount) ? 0 : sellAmount;
@@ -101,14 +113,8 @@ export default function SellCard({
 						<input
 							type="number"
 							min={0}
-							value={sellAmount}
-							onChange={(e) =>
-								setSellAmount(
-									parseInt(e.target.value) > currentHolding
-										? Math.floor(currentHolding)
-										: parseInt(e.target.value)
-								)
-							}
+							value={inputDisplay}
+							onChange={(e) => change(e)}
 						/>
 					</li>
 					<li>

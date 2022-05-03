@@ -32,6 +32,7 @@ export default function BuyCard({
 	setShow
 }: buyCard) {
 	const [amount, setAmount] = useState(0);
+	const [inputDisplay, setInputDisplay] = useState("0");
 	const [results, setResults] = useState<res>();
 	const [message, setMessage] = useState("");
 	const navigate = useNavigate();
@@ -48,6 +49,16 @@ export default function BuyCard({
 			debit: roundTow(amo * price)
 		});
 	}, [amount, currentHolding, portfolio, price]);
+
+	function change(e: React.ChangeEvent<HTMLInputElement>) {
+		let sVal = e.target.value;
+		if (sVal === "") sVal = "0";
+		const val = parseInt(sVal);
+		setAmount((p) => (val < moneyAvailable / price ? val : p));
+	}
+	useEffect(() => {
+		setInputDisplay(amount.toString());
+	}, [amount]);
 
 	function buy() {
 		setMessage("");
@@ -101,15 +112,8 @@ export default function BuyCard({
 							<input
 								type="number"
 								min={0}
-								value={amount}
-								onChange={(e) =>
-									setAmount((p) =>
-										parseInt(e.target.value) < moneyAvailable / price ||
-										e.target.value === ""
-											? parseInt(e.target.value)
-											: p
-									)
-								}
+								value={inputDisplay}
+								onChange={(e) => change(e)}
 							/>
 							<p>({results?.amountPer}%)</p>
 						</div>
