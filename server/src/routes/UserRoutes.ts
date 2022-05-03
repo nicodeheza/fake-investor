@@ -9,6 +9,7 @@ import checkAuthenticated from "../middelwares/auth";
 import userStats from "../controllers/user/userStats";
 import userStocks from "../controllers/user/userStocks";
 import userChart from "../controllers/user/userChart";
+import resetUser from "../controllers/user/resetUser";
 
 router.post("/singup", Singup);
 router.post("/login", passport.authenticate("local"), Login);
@@ -17,6 +18,7 @@ router.get("/auth", checkAuthenticated, Auth);
 router.get("/userStats", checkAuthenticated, userStats);
 router.get("/stocks", checkAuthenticated, userStocks);
 router.get("/userChart", checkAuthenticated, userChart);
+router.delete("/reset", checkAuthenticated, resetUser);
 
 const UserRoutes: Router = router;
 export default UserRoutes;

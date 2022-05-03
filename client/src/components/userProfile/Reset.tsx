@@ -11,21 +11,20 @@ export default function Reset() {
 	const navigate = useNavigate();
 
 	function reset() {
-		// fetch(`${API_URL}/user/reset`, {
-		// 	method: "DELETE",
-		// 	credentials: "include"
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		console.log(data);
-		// 		if (data.userName === "") {
-		// 			setUserName("");
-		// 			navigate("/");
-		// 		} else {
-		// 			window.location.reload();
-		// 		}
-		// 	})
-		// 	.catch((err) => console.log(err));
+		fetch(`${API_URL}/user/reset`, {
+			method: "DELETE",
+			credentials: "include"
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.userName === "") {
+					setUserName("");
+					navigate("/");
+				} else {
+					window.location.reload();
+				}
+			})
+			.catch((err) => console.log(err));
 	}
 	return (
 		<>

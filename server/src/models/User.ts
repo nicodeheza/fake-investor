@@ -138,6 +138,23 @@ const User = {
 			console.log(err);
 		}
 	},
+	createUfdOwnership: async (userId: number) => {
+		try {
+			const [row] = await db.promise().execute(`
+			SELECT stock_id FROM Stocks WHERE symbol="FUD"
+			`);
+			const fudId = (<{stock_id: number}[]>row)[0].stock_id;
+
+			await db.promise().query(
+				`
+			INSERT INTO Ownerships ( user_id, stock_id, quantity) VALUES (?, ?, 1000000);
+			`,
+				[userId, fudId]
+			);
+		} catch (err) {
+			console.log(err);
+		}
+	},
 	getToDayHistory: async (userId: number) => {
 		try {
 			const [rows] = await db.promise().query(
@@ -329,6 +346,30 @@ const User = {
 			).map((obj) => {
 				return {...obj, buy: obj.buy === 1};
 			});
+		} catch (err) {
+			console.log(err);
+		}
+	},
+	deleteUserHistory: async (userId: number) => {
+		try {
+			await db.promise().query(
+				`
+			DELETE FROM History WHERE user_id=?
+			`,
+				[userId]
+			);
+		} catch (err) {
+			console.log(err);
+		}
+	},
+	deleteUserOwnerships: async (userId: number) => {
+		try {
+			await db.promise().query(
+				`
+			DELETE FROM Ownerships WHERE user_id=?
+			`,
+				[userId]
+			);
 		} catch (err) {
 			console.log(err);
 		}
