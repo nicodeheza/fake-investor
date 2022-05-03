@@ -81,13 +81,23 @@ const User = {
 	},
 	updateStockQuantity: async (stockId: number, userId: number, newVal: number) => {
 		try {
-			await db.promise().query(
-				`
-			UPDATE Ownerships SET quantity=?
-			WHERE user_id=? AND stock_id=?
-			`,
-				[newVal, userId, stockId]
-			);
+			if (newVal > 0) {
+				await db.promise().query(
+					`
+				UPDATE Ownerships SET quantity=?
+				WHERE user_id=? AND stock_id=?
+				`,
+					[newVal, userId, stockId]
+				);
+			} else {
+				await db.promise().query(
+					`
+				DELETE FROM Ownerships
+				WHERE user_id=? AND stock_id=?
+				`,
+					[userId, stockId]
+				);
+			}
 		} catch (err) {
 			console.log(err);
 		}
