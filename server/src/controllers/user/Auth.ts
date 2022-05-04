@@ -1,5 +1,4 @@
 import {Request, Response} from "express";
-import user from "../../models/UserType";
 
 export default function Auth(req: Request, res: Response) {
 	if (req.isAuthenticated()) {
