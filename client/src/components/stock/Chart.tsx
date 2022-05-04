@@ -3,6 +3,7 @@ import {API_URL} from "../../consts";
 // import chartMock from "./chartMock";
 import * as d3 from "d3";
 import roundTow from "../../helpers/roundTow";
+import Spinner from "../Spinner";
 
 interface chart {
 	symbol: string | undefined;
@@ -49,7 +50,6 @@ export default function Chart({symbol}: chart) {
 					setAllData(data);
 				})
 				.catch((err) => console.log(err));
-			// setAllData(chartMock);
 		}
 	}, [symbol]);
 
@@ -523,7 +523,27 @@ export default function Chart({symbol}: chart) {
 					5Y
 				</button>
 			</div>
-			<div className="stock-b-graf" ref={svgDiv}></div>
+			<div className="stock-b-graf" ref={svgDiv}>
+				{!chartData ? (
+					<div
+						style={{
+							width: "100%",
+							height: "100%",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center"
+						}}
+					>
+						<div
+							style={{
+								width: "10%"
+							}}
+						>
+							<Spinner />
+						</div>
+					</div>
+				) : null}
+			</div>
 		</div>
 	);
 }

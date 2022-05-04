@@ -183,7 +183,69 @@ export default function Stock() {
 					) : null}
 				</div>
 			) : (
-				<div></div>
+				<div className="stock-main-container">
+					<h1>
+						<div className="loading-div" />
+					</h1>
+					<div className="stock-main-bar">
+						<div className="stock-main-bar-price">
+							<h3>
+								<div className="loading-div" />
+							</h3>
+							<p>Price</p>
+						</div>
+						<div className="stock-main-bar-daily">
+							<h3>
+								<div className="loading-div" />
+							</h3>
+							<p>Change</p>
+						</div>
+					</div>
+					<div className="stock-b">
+						<div className="stock-b-data">
+							<div className="stock-b-data-item">
+								<p className="stock-b-data-item-l">Previous Close</p>
+								<p className="stock-b-data-item-r">
+									<div className="loading-div" />
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p className="stock-b-data-item-l">Open</p>
+								<p>
+									<div className="loading-div" />
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p>Day's Range</p>
+								<p>
+									<div className="loading-div" />
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p>52 Week Range</p>
+								<p>
+									<div className="loading-div" />
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p>Volume</p>
+								<p>
+									<div className="loading-div" />
+								</p>
+							</div>
+							<div className="stock-b-data-item">
+								<p>Avg. Volume</p>
+								<p>
+									<div className="loading-div" />
+								</p>
+							</div>
+						</div>
+						<div className="stock-b-chart-container">
+							<Chart symbol={params.symbol} />
+						</div>
+					</div>
+					<div className="stock-b-btn-container"></div>
+				</div>
 			)}
 		</>
 	);

@@ -1,6 +1,6 @@
 import "./App.css";
 import {UserProvider} from "./context/UserContext";
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 import SingUp from "./pages/SingUp";
@@ -9,21 +9,34 @@ import Stock from "./pages/Stock";
 import Portfolio from "./pages/Portfolio";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import {useLayoutEffect} from "react";
+
+function Wrapper({children}: {children: JSX.Element}) {
+	const location = useLocation();
+	useLayoutEffect(() => {
+		document.documentElement.scrollTo(0, 0);
+	}, [location.pathname]);
+	return children;
+}
 
 function App() {
 	return (
 		<UserProvider>
 			<Router>
-				<NavBar />
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="login" element={<LogIn />} />
-					<Route path="singup" element={<SingUp />} />
-					<Route path="search" element={<Search />} />
-					<Route path="stock/:symbol" element={<Stock />} />
-					<Route path="portfolio" element={<Portfolio />} />
-				</Routes>
-				<Footer />
+				<Wrapper>
+					<>
+						<NavBar />
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="login" element={<LogIn />} />
+							<Route path="singup" element={<SingUp />} />
+							<Route path="search" element={<Search />} />
+							<Route path="stock/:symbol" element={<Stock />} />
+							<Route path="portfolio" element={<Portfolio />} />
+						</Routes>
+						<Footer />
+					</>
+				</Wrapper>
 			</Router>
 		</UserProvider>
 	);

@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import Spinner from "../components/Spinner";
 import {API_URL} from "../consts";
 import roundTow from "../helpers/roundTow";
 import "./search.css";
@@ -103,7 +104,9 @@ export default function Search() {
 					</ul>
 				) : typing && searchResult?.length === 0 ? (
 					<div className="search-result-box-loading">
-						<img src="assets/loader.svg" alt="loading..." />
+						<div className="search-result-box-loading-spinner">
+							<Spinner />
+						</div>
 					</div>
 				) : (
 					<></>
@@ -135,13 +138,13 @@ export default function Search() {
 									) : (
 										<>
 											<td className="loading-td">
-												<div />
+												<div className="loading-div" />
 											</td>
 											<td className="loading-td">
-												<div />
+												<div className="loading-div" />
 											</td>
 											<td className="loading-td">
-												<div />
+												<div className="loading-div" />
 											</td>
 										</>
 									)}

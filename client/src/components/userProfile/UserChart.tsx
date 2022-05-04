@@ -4,6 +4,7 @@ import {API_URL} from "../../consts";
 import {UseUserName} from "../../context/UserContext";
 import * as d3 from "d3";
 import roundTow from "../../helpers/roundTow";
+import Spinner from "../Spinner";
 
 interface userChartData {
 	[key: string]: {
@@ -365,10 +366,27 @@ export default function UserChart() {
 	}, [chartDimensions, userChartData]);
 	return (
 		<>
-			<div
-				ref={userSvgDiv}
-				style={{width: "100%", height: "100%", position: "relative"}}
-			></div>
+			<div ref={userSvgDiv} style={{width: "100%", height: "100%", position: "relative"}}>
+				{!userChartData ? (
+					<div
+						style={{
+							width: "100%",
+							height: "100%",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center"
+						}}
+					>
+						<div
+							style={{
+								width: "10%"
+							}}
+						>
+							<Spinner />
+						</div>
+					</div>
+				) : null}
+			</div>
 		</>
 	);
 }

@@ -9,6 +9,9 @@ import "./portfolio.css";
 import MbTable from "../components/userProfile/MbTable";
 import UserChart from "../components/userProfile/UserChart";
 import Reset from "../components/userProfile/Reset";
+import UserStatsLoading from "../components/userProfile/UserStatsLoading";
+import DkTableLoading from "../components/userProfile/DkTableLoading";
+import MbTableLoading from "../components/userProfile/MbTableLoading";
 
 export default function Portfolio() {
 	const {userName, setUserName} = UseUserName();
@@ -89,7 +92,9 @@ export default function Portfolio() {
 							stocksPer={stats.stocksPer}
 							total={stats.total}
 						/>
-					) : null}
+					) : (
+						<UserStatsLoading />
+					)}
 					<div className="portfolio-stats-btn-container">
 						<Btn
 							text="Stock Trading"
@@ -113,7 +118,12 @@ export default function Portfolio() {
 							<DkTable stocks={filteredStoks} portfolioTotal={stats.total} />
 							<MbTable stocks={filteredStoks} portfolioTotal={stats.total} />
 						</>
-					) : null}
+					) : (
+						<>
+							<DkTableLoading />
+							<MbTableLoading />
+						</>
+					)}
 				</div>
 			</div>
 			<div className="portfolio-reset">

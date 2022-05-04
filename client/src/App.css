@@ -82,3 +82,25 @@ a {
 	font-size: 12px !important;
 	text-align: center;
 }
+
+.loading-div {
+	background: linear-gradient(90deg, var(--bk-dark), var(--bk-light), var(--bk-dark));
+	background-size: 400% 400%;
+	animation: loading 1s linear infinite;
+	width: 90%;
+	height: 60%;
+	min-height: 1em;
+	min-width: 5em;
+}
+
+@keyframes loading {
+	0% {
+		background-position: 110% 50%;
+	}
+	50% {
+		background-position: 50% 50%;
+	}
+	100% {
+		background-position: -10% 50%;
+	}
+}
