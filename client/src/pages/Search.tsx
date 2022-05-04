@@ -130,7 +130,7 @@ export default function Search() {
 											<td>{topData[k].price}</td>
 											<td className={topData[k].variation >= 0 ? "green" : "red"}>
 												{topData[k].variation >= 0 ? "+" : null}
-												{roundTow(topData[k].variation)}
+												{roundTow(topData[k].variation)}%
 											</td>
 										</>
 									) : (

@@ -1,6 +1,7 @@
 import mysql from "mysql2";
 import "dotenv/config";
 
+//add connections for test, dev and production
 const db = mysql.createConnection({
 	host: "127.0.0.1",
 	user: process.env.MYSQL_USER,
