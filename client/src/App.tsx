@@ -10,6 +10,7 @@ import Portfolio from "./pages/Portfolio";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import {useLayoutEffect} from "react";
+import RedirectToHome from "./components/RedirectToHome";
 
 function Wrapper({children}: {children: JSX.Element}) {
 	const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
 							<Route path="search" element={<Search />} />
 							<Route path="stock/:symbol" element={<Stock />} />
 							<Route path="portfolio" element={<Portfolio />} />
+							<Route path="*" element={<RedirectToHome />} />
 						</Routes>
 						<Footer />
 					</>
