@@ -41,7 +41,7 @@ export default function Stock() {
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.message === "Nonexistent symbol") {
-					navigate("/");
+					navigate("/search");
 				} else {
 					setData(data);
 				}
