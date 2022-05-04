@@ -45,12 +45,6 @@ export default function Stock() {
 				setData(data);
 			})
 			.catch((err) => console.log(err));
-		// setData(m);
-
-		fetch(`${API_URL}/stock/buy-card`, {
-			method: "GET",
-			credentials: "include"
-		});
 	}, [params]);
 
 	function getCardProps(buy: boolean) {
