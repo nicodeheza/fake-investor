@@ -17,7 +17,6 @@ export default function NavBar() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				// console.log(data);
 				setUserName(data.userName);
 			})
 			.catch((err) => console.log(err));

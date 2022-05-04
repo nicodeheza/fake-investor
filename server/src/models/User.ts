@@ -20,10 +20,8 @@ const User = {
 					hash,
 					salt
 				]);
-			// console.log(rows.toString());
 			return ["success", (<{[key: string]: any}>rows).insertId];
 		} catch (err: any) {
-			// console.log(err);
 			return err.sqlMessage;
 		}
 	},
@@ -108,7 +106,6 @@ const User = {
 			SELECT stock_id FROM Stocks WHERE symbol="FUD"
 			`);
 			const fudId = (<{stock_id: number}[]>row)[0].stock_id;
-			console.log(fudId);
 			await db.promise().query(
 				`
 			UPDATE Ownerships  SET quantity= quantity - ?
@@ -126,7 +123,6 @@ const User = {
 			SELECT stock_id FROM Stocks WHERE symbol="FUD"
 			`);
 			const fudId = (<{stock_id: number}[]>row)[0].stock_id;
-			console.log(fudId);
 			await db.promise().query(
 				`
 			UPDATE Ownerships  SET quantity= quantity + ?
@@ -318,7 +314,6 @@ const User = {
 			}
 		);
 
-		// console.log(data[0].history_date.toString());
 		return res;
 	},
 	getTransactionFromDateToNow: async (userId: number, date: Date) => {
@@ -335,7 +330,6 @@ const User = {
 			`,
 				[userId, date]
 			);
-			console.log(data);
 			return (
 				data as {
 					history_date: Date;

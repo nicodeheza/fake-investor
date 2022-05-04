@@ -27,7 +27,6 @@ export default function LogIn() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
 				setUserName(data.userName);
 				navigate("/portfolio");
 			})

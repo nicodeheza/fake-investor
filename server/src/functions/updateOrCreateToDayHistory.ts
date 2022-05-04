@@ -7,11 +7,9 @@ export default async function updateOrCreateToDayHistory(userId: number) {
 	const portfolioVal = await getPortfolioVal(userId);
 	const liquid = await User.getFudQuantity(userId);
 	if (!historyPoint) {
-		console.log("not history");
 		const h = await User.addHistory(userId, portfolioVal!, liquid!);
 		historyId = (h as {[key: string]: any}).insertId;
 	} else {
-		console.log(historyPoint);
 		historyId = historyPoint.history_id;
 		await User.updateHistory(historyId, portfolioVal!, liquid!);
 	}

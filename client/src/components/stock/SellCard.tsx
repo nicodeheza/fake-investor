@@ -86,7 +86,6 @@ export default function SellCard({
 						navigate("/");
 					} else {
 						setMessage("Error");
-						console.log(data.message);
 					}
 				})
 				.catch((err) => console.log(err));

@@ -18,8 +18,6 @@ export default async function userStocks(req: Request, res: Response) {
 		const vals = await getStocksData(
 			(stocks as {[key: string]: string}[]).map((obj) => obj.symbol)
 		);
-		// console.log("stocks: ", stocks);
-		// console.log("vals: ", vals);
 
 		const result = (stocks as {[key: string]: string}[]).map((obj) => {
 			const fullName = obj.stock_name;

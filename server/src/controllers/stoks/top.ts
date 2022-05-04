@@ -20,7 +20,7 @@ export default async function top(req: Request, res: Response) {
 		const stocksData: stockData = await getStocksData(
 			(topStocks as topStocks).map((ele) => ele.symbol)
 		);
-		// console.log(stocksData);
+
 		const top: {
 			[key: number]: {
 				name: string;

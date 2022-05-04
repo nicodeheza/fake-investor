@@ -21,20 +21,18 @@ export default async function fillUserHistoryPoints(
 		for (let i = 0; i < dates.length; i++) {
 			if (hp[dates[i + 1]]) {
 				const dateDiff = parseInt(dates[i + 1]) - parseInt(dates[i]);
-				// console.log("nn: ", new Date(parseInt(dates[i + 1])));
+
 				const oneDay = 1000 * 60 * 60 * 24;
 				if (dateDiff > oneDay) {
-					// get dates[i] ownership
 					const ownership = await getHistoricalOwnerships(
 						new Date(parseInt(dates[i])),
 						userId
 					);
 					complete = false;
 					const datesToComplete = dateDiff / oneDay;
-					// console.log("datesToComplete", datesToComplete);
+
 					for (let j = 0; j < datesToComplete - 1; j++) {
 						const date = parseInt(dates[i]) + (j + 1) * oneDay;
-						// console.log("date: ", new Date(date));
 						const datePrices = await getStockHistoricalPrice(
 							Object.keys(ownership!).map((symbol) => {
 								return {
@@ -43,7 +41,6 @@ export default async function fillUserHistoryPoints(
 								};
 							})
 						);
-						// console.log("datePrice: ", datePrices);
 						const totalStockPrice = datePrices?.reduce((prev, curr) => {
 							return prev + ownership![curr.symbol] * curr.price;
 						}, 0);

@@ -39,7 +39,6 @@ export default function SingUp() {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log(data);
 					if (data.message) {
 						setMessage(data.message);
 					} else if (data.userName) {

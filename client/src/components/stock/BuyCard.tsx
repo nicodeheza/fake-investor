@@ -66,7 +66,6 @@ export default function BuyCard({
 			const matchArr = name.match(/\(([a-zA-Z]+)\)/);
 			const symbol = matchArr![1];
 			const fullName = name.split("(")[0].trim();
-			// console.log({amount, symbol, fullName});
 
 			fetch(`${API_URL}/stock/buy`, {
 				method: "POST",
@@ -85,7 +84,6 @@ export default function BuyCard({
 						navigate("/");
 					} else {
 						setMessage("Error");
-						console.log(data.message);
 					}
 				})
 				.catch((err) => console.log(err));

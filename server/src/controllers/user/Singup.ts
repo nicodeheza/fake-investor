@@ -19,8 +19,6 @@ export default async function Singup(req: express.Request, res: express.Response
 			hashSalt.hash,
 			hashSalt.salt
 		);
-		console.log("user save: ", saveUser);
-		//saveUser[1]
 
 		if (saveUser[0] === "success") {
 			const fudId = await Stock.getIdFromSymbol("FUD");

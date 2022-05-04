@@ -28,7 +28,6 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				// console.log(data);
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");
@@ -46,7 +45,6 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				// console.log(data);
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");

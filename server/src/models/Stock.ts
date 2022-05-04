@@ -9,8 +9,6 @@ const Stock = {
 			`,
 				[symbol]
 			);
-
-			// console.log((<{stock_id: number}[]>rows)[0].stock_id);
 			return (<{stock_id: number}[]>rows)[0]?.stock_id;
 		} catch (err) {
 			console.log(err);
@@ -24,7 +22,6 @@ const Stock = {
 			`,
 				[name, symbol]
 			);
-			// console.log(rows);
 
 			return (<{[key: string]: any}>rows).insertId;
 		} catch (err) {

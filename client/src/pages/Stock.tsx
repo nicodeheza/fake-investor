@@ -34,14 +34,12 @@ export default function Stock() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log(params.symbol);
 		fetch(`${API_URL}/stock/${params.symbol}`, {
 			method: "GET",
 			credentials: "include"
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
 				setData(data);
 			})
 			.catch((err) => console.log(err));
@@ -54,7 +52,6 @@ export default function Stock() {
 		})
 			.then((res) => res.json())
 			.then((d) => {
-				console.log(d);
 				if (d.userName === "") {
 					setUserName("");
 					navigate("/");

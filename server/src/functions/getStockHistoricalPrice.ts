@@ -41,12 +41,10 @@ export default async function getStockHistoricalPrice(
 				);
 				const fetchData = await response.json();
 				console.log("getStockHistoricalPrice api call");
-				// console.log("fetchData: ", fetchData);
-				//probar todo el controlador ya no puedo Limit Exceeded y ver como no exeder el limite
+
 				await Promise.all(
 					sym.map((s) => {
 						data[s] = fetchData[s];
-						console.log("caching stockHistory");
 						return redisClientCache.setEx(
 							`stockHistory=${s}`,
 							60 * 12,

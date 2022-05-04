@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from "react";
 import {API_URL} from "../../consts";
-// import chartMock from "./chartMock";
 import * as d3 from "d3";
 import roundTow from "../../helpers/roundTow";
 import Spinner from "../Spinner";
@@ -46,7 +45,6 @@ export default function Chart({symbol}: chart) {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log(data);
 					setAllData(data);
 				})
 				.catch((err) => console.log(err));

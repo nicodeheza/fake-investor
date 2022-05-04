@@ -22,7 +22,6 @@ export default async function getStocksData(symbols: string[]) {
 	);
 
 	const apiSymbols = stocksValues.filter((obj) => obj.price === null);
-	// console.log(apiSymbols);
 	if (apiSymbols.length > 0) {
 		const callArr = sliceIntoChunks(apiSymbols, 10);
 		let resArr = await Promise.all(

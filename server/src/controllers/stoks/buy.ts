@@ -1,11 +1,9 @@
 import {Request, Response} from "express";
-import getPortfolioVal from "../../functions/getPortfolioVal";
 import updateOrCreateToDayHistory from "../../functions/updateOrCreateToDayHistory";
 import Stock from "../../models/Stock";
 import User from "../../models/User";
 
 export default async function buy(req: Request, res: Response) {
-	// console.log("body: ", req.body);
 	const {amount, symbol, name, price} = req.body;
 
 	try {

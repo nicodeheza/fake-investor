@@ -50,7 +50,6 @@ export default function Search() {
 					})
 						.then((res) => res.json())
 						.then((data) => {
-							console.log(data);
 							if (!data?.ResultSet?.Result) {
 								setSearchResult([{symbol: "ERROR", name: "Too many calls"}]);
 							} else {
@@ -69,7 +68,6 @@ export default function Search() {
 		fetch(`${API_URL}/stock/top`)
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
 				setTopData(data);
 			});
 	}, []);
