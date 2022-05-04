@@ -14,7 +14,7 @@ import resetUser from "../controllers/user/resetUser";
 router.post("/singup", Singup);
 router.post("/login", passport.authenticate("local"), Login);
 router.get("/logout", checkAuthenticated, logout);
-router.get("/auth", checkAuthenticated, Auth);
+router.get("/auth", Auth);
 router.get("/userStats", checkAuthenticated, userStats);
 router.get("/stocks", checkAuthenticated, userStocks);
 router.get("/userChart", checkAuthenticated, userChart);
