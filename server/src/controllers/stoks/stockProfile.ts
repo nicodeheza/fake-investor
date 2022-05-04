@@ -59,5 +59,6 @@ export default async function stockProfile(req: Request, res: Response) {
 		res.status(200).json(sendData);
 	} catch (err) {
 		console.log(err);
+		res.status(500).json({message: "Nonexistent symbol"});
 	}
 }

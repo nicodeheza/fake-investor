@@ -40,10 +40,16 @@ export default function Stock() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setData(data);
+				if (data.message === "Nonexistent symbol") {
+					navigate("/");
+				} else {
+					setData(data);
+				}
 			})
-			.catch((err) => console.log(err));
-	}, [params]);
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [params, navigate]);
 
 	function getCardProps(buy: boolean) {
 		fetch(`${API_URL}/stock/buy-card`, {
