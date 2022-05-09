@@ -46,8 +46,7 @@ export default async function populateDb() {
 	stocks.forEach((ele, i) => {
 		ele.id = (stocksCreated[i][0] as {[key: string]: any}).insertId;
 	});
-	// console.log(stocksCreated);
-	// console.log(stocks);
+
 	const histories = [
 		{
 			date: startDay,
@@ -154,4 +153,5 @@ export default async function populateDb() {
 			[userId, 1, 994000]
 		)
 	]);
+	return histories;
 }
