@@ -1,24 +1,14 @@
 import db from "../db/db";
 import {createHash} from "../functions/password";
 
-export default async function populateDb() {
-	const {hash, salt} = (await createHash("test")) as {hash: string; salt: string};
-	const startDay = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7);
+type stocks = {
+	name: string;
+	symbol: string;
+	id?: number;
+}[];
 
-	const [userCreated] = await db.promise().query(
-		`
-        INSERT INTO Users (user_name, email, hash, salt, start_day)
-        VALUES(?, ?, ?, ?, ?);
-    `,
-		["testUser", "testUser@test.com", hash, salt, startDay]
-	);
-	const userId: number = (userCreated as {[key: string]: any}).insertId;
-	// console.log(userId);
-	const stocks: {
-		name: string;
-		symbol: string;
-		id?: number;
-	}[] = [
+export async function addStocks() {
+	const stocks: stocks = [
 		{
 			name: "International Business Machines Corporation",
 			symbol: "IBM"
@@ -46,6 +36,23 @@ export default async function populateDb() {
 	stocks.forEach((ele, i) => {
 		ele.id = (stocksCreated[i][0] as {[key: string]: any}).insertId;
 	});
+
+	return stocks;
+}
+
+export async function populateDb(stocks: stocks, userEmail: string) {
+	const {hash, salt} = (await createHash("test")) as {hash: string; salt: string};
+	const startDay = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7);
+
+	const [userCreated] = await db.promise().query(
+		`
+        INSERT INTO Users (user_name, email, hash, salt, start_day)
+        VALUES(?, ?, ?, ?, ?);
+    `,
+		["testUser", userEmail, hash, salt, startDay]
+	);
+	const userId: number = (userCreated as {[key: string]: any}).insertId;
+	// console.log(userId);
 
 	const histories = [
 		{
@@ -153,5 +160,5 @@ export default async function populateDb() {
 			[userId, 1, 994000]
 		)
 	]);
-	return histories;
+	return {histories, userId};
 }

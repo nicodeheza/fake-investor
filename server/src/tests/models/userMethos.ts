@@ -2,6 +2,7 @@ import {expect} from "chai";
 import db from "../../db/db";
 import User from "../../models/User";
 import user from "../../models/UserType";
+import {populateDb} from "../populateDb";
 import testConst from "../testConst";
 
 describe("User methods", function () {
@@ -16,7 +17,7 @@ describe("User methods", function () {
 		it("FindUserByEmail(testUser@test.com) must return the test user", async function () {
 			const findUserRes = await User.findUserByEmail("testUser@test.com");
 			const findUser: user = (findUserRes as user[])[0];
-			expect(findUser.user_id).to.equal(1);
+			expect(findUser.user_id).to.equal(testConst.userId);
 			expect(findUser.email).to.equal("testUser@test.com");
 			expect(findUser.hash).to.be.a("string");
 			expect(findUser.salt).to.be.a("string");
@@ -65,7 +66,7 @@ describe("User methods", function () {
 		it("FindById(1) must return test user", async function () {
 			const findUserRes = await User.findById(1);
 			const findUser = (findUserRes as user[])[0];
-			expect(findUser.user_id).to.equal(1);
+			expect(findUser.user_id).to.equal(testConst.userId);
 			expect(findUser.email).to.equal("testUser@test.com");
 			expect(findUser.user_name).to.equal("testUser");
 		});
@@ -94,7 +95,7 @@ describe("User methods", function () {
 			);
 			const findOwnership = (row as {[key: string]: any}[])[0];
 
-			expect(findOwnership.user_id).to.equal(1);
+			expect(findOwnership.user_id).to.equal(testConst.userId);
 			expect(findOwnership.stock_id).to.equal(stockId);
 			expect(parseInt(findOwnership.quantity)).to.equal(200);
 		});
@@ -139,7 +140,7 @@ describe("User methods", function () {
             INSERT INTO Ownerships (user_id, stock_id, quantity)
             VALUES (?, ?, ?)
         `,
-				[1, stockId, 100]
+				[testConst.userId, stockId, 100]
 			);
 		});
 		after(async function () {
@@ -157,10 +158,10 @@ describe("User methods", function () {
 				`
                 SELECT * FROM Ownerships WHERE user_id= ? AND stock_id= ?
             `,
-				[1, stockId]
+				[testConst.userId, stockId]
 			);
 			const res = (row as {[key: string]: any}[])[0];
-			expect(res.user_id).to.equal(1);
+			expect(res.user_id).to.equal(testConst.userId);
 			expect(res.stock_id).to.equal(stockId);
 			expect(parseInt(res.quantity)).to.equal(200);
 		});
@@ -170,7 +171,7 @@ describe("User methods", function () {
 				`
                 SELECT * FROM Ownerships WHERE user_id= ? AND stock_id= ?
             `,
-				[1, stockId]
+				[testConst.userId, stockId]
 			);
 			expect((row as any[]).length).to.equal(0);
 		});
@@ -182,7 +183,7 @@ describe("User methods", function () {
 			UPDATE Ownerships  SET quantity=?
 			WHERE user_id=? AND stock_id=?
 			`,
-				[994000, 1, fudId]
+				[994000, testConst.userId, fudId]
 			);
 		});
 		it("subtractFud(4000) must return 990000", async function () {
@@ -191,7 +192,7 @@ describe("User methods", function () {
 				`
                 SELECT quantity FROM Ownerships WHERE user_id=? AND stock_id=?
             `,
-				[1, fudId]
+				[testConst.userId, fudId]
 			);
 			const result = (res as {quantity: string}[])[0].quantity;
 			expect(parseInt(result)).to.equal(990000);
@@ -208,7 +209,7 @@ describe("User methods", function () {
 			UPDATE Ownerships  SET quantity=?
 			WHERE user_id=? AND stock_id=?
 			`,
-				[994000, 1, fudId]
+				[994000, testConst.userId, fudId]
 			);
 		});
 		it("addFud(4000) must be 998000", async function () {
@@ -217,7 +218,7 @@ describe("User methods", function () {
 				`
                 	SELECT quantity FROM Ownerships WHERE user_id=? AND stock_id=?
             		`,
-				[1, fudId]
+				[testConst.userId, fudId]
 			);
 			const result = (res as {quantity: string}[])[0].quantity;
 			expect(parseInt(result)).to.equal(998000);
@@ -259,10 +260,13 @@ describe("User methods", function () {
 	});
 	describe("GetToDayHistory", function () {
 		before(async function () {
-			await db.promise().execute(`
+			await db.promise().query(
+				`
 				INSERT INTO History (user_id, portfolio_value, liquid)
-				VALUES (1, 1000, 100)
-			`);
+				VALUES (?, 1000, 100)
+			`,
+				[testConst.userId]
+			);
 		});
 		after(async function () {
 			await db.promise().execute(`
@@ -271,9 +275,9 @@ describe("User methods", function () {
 		});
 		it("Today history muy be return successfully", async function () {
 			type history = {
-				history_id: Number;
+				history_id: number;
 				history_date: Date;
-				user_id: 1;
+				user_id: number;
 				portfolio_value: string;
 				liquid: string;
 			};
@@ -335,10 +339,13 @@ describe("User methods", function () {
 	describe("updateHistory", function () {
 		let historyId: number;
 		before(async function () {
-			const [row] = await db.promise().execute(`
+			const [row] = await db.promise().query(
+				`
 				INSERT INTO History (user_id, portfolio_value, liquid)
-				VALUES (1, 1000, 100)
-			`);
+				VALUES (?, 1000, 100)
+			`,
+				[testConst.userId]
+			);
 			historyId = (row as {[key: string]: any}).insertId;
 		});
 		after(async function () {
@@ -365,10 +372,13 @@ describe("User methods", function () {
 	describe("AddTransaction", function () {
 		let historyId: number;
 		before(async function () {
-			const [row] = await db.promise().execute(`
+			const [row] = await db.promise().query(
+				`
 				INSERT INTO History (user_id, portfolio_value, liquid)
-				VALUES (1, 1000, 100)
-			`);
+				VALUES (?, 1000, 100)
+			`,
+				[testConst.userId]
+			);
 			historyId = (row as {[key: string]: any}).insertId;
 		});
 		after(async function () {
@@ -399,9 +409,9 @@ describe("User methods", function () {
 			for (let i = 0; i < keys.length; i++) {
 				const s = keys[i];
 				const date = new Date(parseInt(s));
-				expect(date.getDate()).to.deep.equal(testConst.historyPoints[i].date.getDate());
-				expect(date.getMonth()).to.deep.equal(testConst.historyPoints[i].date.getMonth());
-				expect(date.getFullYear()).to.deep.equal(
+				expect(date.getDate()).to.equal(testConst.historyPoints[i].date.getDate());
+				expect(date.getMonth()).to.equal(testConst.historyPoints[i].date.getMonth());
+				expect(date.getFullYear()).to.equal(
 					testConst.historyPoints[i].date.getFullYear()
 				);
 				expect(points[s].portfolioValue).to.equal(
@@ -429,6 +439,102 @@ describe("User methods", function () {
 					testConst.historyPoints[i].transactions.stockId
 				);
 			}
+		});
+	});
+	describe("GetTransactionFromDateToNow", function () {
+		it("get all transactions from 10 days ago", async function () {
+			const date = new Date(Date.now() - 1000 * 60 * 60 * 24 * 10);
+			let transactions = await User.getTransactionFromDateToNow(1, date);
+			// console.log(transactions);
+			expect(transactions).to.have.lengthOf(4);
+			if (transactions) {
+				for (let i = 0; i < transactions.length; i++) {
+					expect(transactions[i].history_date.getDate()).to.equal(
+						testConst.historyPoints[i].date.getDate()
+					);
+					expect(transactions[i].history_date.getMonth()).to.equal(
+						testConst.historyPoints[i].date.getMonth()
+					);
+					expect(transactions[i].history_date.getFullYear()).to.equal(
+						testConst.historyPoints[i].date.getFullYear()
+					);
+					expect(transactions[i].buy).to.equal(
+						testConst.historyPoints[i].transactions.buy
+					);
+					expect(transactions[i].quantity).to.equal(
+						testConst.historyPoints[i].transactions.quantity
+					);
+
+					const [row] = await db.promise().query(
+						`
+						SELECT stock_id FROM Stocks WHERE
+						symbol=?
+					`,
+						[transactions[i].symbol]
+					);
+					expect((row as {stock_id: number}[])[0].stock_id).to.equal(
+						testConst.historyPoints[i].transactions.stockId
+					);
+				}
+			} else {
+				expect(transactions).to.be.an("array");
+			}
+		});
+	});
+	describe("DeleteUserHistory", function () {
+		let id: number;
+		before(async function () {
+			const {histories, userId} = await populateDb(
+				testConst.stocks,
+				"deleteHistory@test.com"
+			);
+			id = userId;
+		});
+		after(async function () {
+			await db.promise().query(
+				`
+				DELETE FROM Users WHERE user_id= ?
+			`,
+				[id]
+			);
+		});
+		it("history must be deleted successfully", async function () {
+			await User.deleteUserHistory(id);
+			const [row] = await db.promise().query(
+				`
+				SELECT * FROM History WHERE user_id= ?
+			`,
+				[id]
+			);
+			expect(row).to.have.lengthOf(0);
+		});
+	});
+	describe("DeleteUserOwnerships", function () {
+		let id: number;
+		before(async function () {
+			const {histories, userId} = await populateDb(
+				testConst.stocks,
+				"deleteOwnership@test.com"
+			);
+			id = userId;
+		});
+		after(async function () {
+			await db.promise().query(
+				`
+				DELETE FROM Users WHERE user_id= ?
+			`,
+				[id]
+			);
+		});
+		it("ownership must be deleted successfully", async function () {
+			await User.deleteUserOwnerships(id);
+			const [row] = await db.promise().query(
+				`
+				SELECT * FROM Ownerships WHERE user_id= ?
+			`,
+				[id]
+			);
+			expect(row).to.have.lengthOf(0);
 		});
 	});
 });
