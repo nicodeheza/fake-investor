@@ -1,4 +1,4 @@
-interface quote {
+export interface quote {
 	symbol: string;
 	regularMarketPrice: number;
 	regularMarketChangePercent: number;
