@@ -1,8 +1,8 @@
 import chai, {expect} from "chai";
-import * as node_fetch from "node-fetch";
-import * as chunks from "../../functions/sliceIntoChunks";
 import sinon from "sinon";
 import sinonChai from "sinon-chai";
+import * as node_fetch from "node-fetch";
+import * as chunks from "../../functions/sliceIntoChunks";
 import {redisClientCache} from "../../redis/redisConn";
 import getStocksData from "../../functions/getStocksData";
 import quoteRes, {quote} from "../mocks/quoteRes";
