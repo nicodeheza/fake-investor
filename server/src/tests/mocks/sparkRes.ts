@@ -16,11 +16,11 @@ function createDates(numOfDates: number) {
 	const dates = [];
 	const startDate = Date.now();
 	const oneDay = 1000 * 60 * 60 * 24;
-	for (let i = 0; i < numOfDates; i++) {
+	for (let i = numOfDates; i >= 0; i--) {
 		const insertDate = startDate - oneDay * i;
 		const day = new Date(insertDate).getDay();
 		if (day === 0 || day === 6) continue;
-		dates.unshift(Math.floor(insertDate / 1000));
+		dates.push(Math.floor(insertDate / 1000));
 	}
 	return dates;
 }
