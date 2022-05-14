@@ -8,7 +8,7 @@ interface symbolData {
 	start: null;
 	dataGranularity: number;
 }
-interface sparkData {
+export interface sparkData {
 	[key: string]: symbolData;
 }
 
