@@ -13,6 +13,7 @@ export default async function getHistoricalOwnerships(date: Date, userId: number
 			}
 		});
 		transactions?.forEach((ele) => {
+			if (!userStoks[ele.symbol]) userStoks[ele.symbol] = 0;
 			if (ele.buy) {
 				userStoks[ele.symbol] -= ele.quantity;
 			} else {
