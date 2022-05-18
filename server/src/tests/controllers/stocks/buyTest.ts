@@ -154,18 +154,52 @@ describe("Buy", function () {
 			updateOrCreateToDayHistoryStub.restore();
 			addTransactionStub.restore();
 		});
-		it("getIdFromSymbol must be called with correct argument", function () {});
-		it("addStock must not be called", function () {});
-		it("getStockHolding must be called with correct arguments", function () {});
-		it("addStockOwnership must not be", function () {});
-		it("updateStockQuantity must be called with correct arguments", function () {});
-		it("subtractFud must be called with correct arguments", function () {});
-		it("updateOrCreateToDayHistory must be called with correct arguments", function () {});
-		it("addTransaction must be called with correct arguments", function () {});
-		it("call res with status 200 and json {message: 'ok'} ", function () {});
+		it("getIdFromSymbol must be called with correct argument", function () {
+			expect(getIdFromSymbolStub).to.have.been.calledWith(reqMock.body.symbol);
+		});
+		it("addStock must not be called", function () {
+			expect(addStockStub).to.have.been.callCount(0);
+		});
+		it("getStockHolding must be called with correct arguments", function () {
+			expect(getStockHoldingStub).to.have.been.calledWith(reqMock.user[0].user_id, 22);
+		});
+		it("addStockOwnership must not be called", function () {
+			expect(addStockStub).to.have.been.callCount(0);
+		});
+		it("updateStockQuantity must be called with correct arguments", function () {
+			expect(updateStockQuantityStub).to.have.been.calledWith(
+				22,
+				reqMock.user[0].user_id,
+				300 + reqMock.body.amount
+			);
+		});
+		it("subtractFud must be called with correct arguments", function () {
+			expect(subtractFudStub).to.have.been.calledWith(
+				reqMock.user[0].user_id,
+				reqMock.body.price * reqMock.body.amount
+			);
+		});
+		it("updateOrCreateToDayHistory must be called with correct arguments", function () {
+			expect(updateOrCreateToDayHistoryStub).to.have.been.calledWith(
+				reqMock.user[0].user_id
+			);
+		});
+		it("addTransaction must be called with correct arguments", function () {
+			expect(addTransactionStub).to.have.been.calledWith(
+				300,
+				22,
+				true,
+				reqMock.body.price,
+				reqMock.body.amount
+			);
+		});
+		it("call res with status 200 and json {message: 'ok'} ", function () {
+			expect(statusSpy).to.have.been.calledWith(200);
+			expect(jsonSpy).to.have.been.calledWith({message: "ok"});
+		});
 	});
 	describe("buy throw an err", function () {
-		before(function () {
+		before(async function () {
 			statusSpy = sinon.spy(resMock, "status");
 			jsonSpy = sinon.spy(resMock, "json");
 			getIdFromSymbolStub = sinon.stub(Stock, "getIdFromSymbol");
@@ -177,10 +211,12 @@ describe("Buy", function () {
 			updateOrCreateToDayHistoryStub = sinon.stub(UCTDH, "default");
 			addTransactionStub = sinon.stub(User, "addTransaction");
 
-			getIdFromSymbolStub.callsFake(() => Promise.reject(new Error("Test Error")));
+			getIdFromSymbolStub.callsFake(() => Promise.reject("Test Error"));
 			addStockStub.callsFake(() => Promise.resolve(22));
 			getStockHoldingStub.callsFake(() => Promise.resolve(300));
 			updateOrCreateToDayHistoryStub.callsFake(() => Promise.resolve(300));
+
+			await buy(reqMock as unknown as Request, resMock as Response);
 		});
 		after(function () {
 			statusSpy.restore();
@@ -194,6 +230,9 @@ describe("Buy", function () {
 			updateOrCreateToDayHistoryStub.restore();
 			addTransactionStub.restore();
 		});
-		it("call res with status 500 and json {message: err} ", function () {});
+		it("call res with status 500 and json {message: err} ", function () {
+			expect(statusSpy).to.have.been.calledWith(500);
+			expect(jsonSpy).to.have.been.calledWith({message: "Test Error"});
+		});
 	});
 });
