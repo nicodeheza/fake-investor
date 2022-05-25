@@ -12,13 +12,29 @@ type stockData = {
 	symbol: string;
 	price: number;
 	change: number;
-}[];
+};
+type stockDataObj = {
+	[key: string]: {
+		price: number;
+		change: number;
+	};
+};
 
 export default async function top(req: Request, res: Response) {
 	try {
 		const topStocks = await Stock.getTopSymbols();
-		const stocksData: stockData = await getStocksData(
+		const stocksData = await getStocksData(
 			(topStocks as topStocks).map((ele) => ele.symbol)
+		);
+		const stocksDataObj: stockDataObj = stocksData.reduce(
+			(acc: stockDataObj, curr: stockData) => ({
+				...acc,
+				[curr.symbol]: {
+					price: curr.price,
+					change: curr.change
+				}
+			}),
+			{}
 		);
 
 		const top: {
@@ -32,9 +48,8 @@ export default async function top(req: Request, res: Response) {
 		(topStocks as topStocks).forEach((ele, i) => {
 			const ranking = i + 1;
 			const name = `${ele.stock_name}(${ele.symbol})`;
-			const [data] = stocksData.filter((obj) => obj.symbol === ele.symbol);
-			const price = data.price;
-			const variation = (data.change * 100) / price;
+			const price = stocksDataObj[ele.symbol].price;
+			const variation = (stocksDataObj[ele.symbol].change * 100) / price;
 			top[ranking] = {
 				name,
 				symbol: ele.symbol,
