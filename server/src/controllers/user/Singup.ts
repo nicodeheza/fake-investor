@@ -10,6 +10,7 @@ export default async function Singup(req: express.Request, res: express.Response
 		const emailRegEX = new RegExp(".+@.+");
 		if (!emailRegEX.test(email)) {
 			res.status(400).json({message: "Please enter a valid email."});
+			return;
 		}
 
 		const hashSalt: any = await createHash(password);
