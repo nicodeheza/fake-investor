@@ -12,6 +12,8 @@ import passportConfig from "./middelwares/passaportConfig";
 const RedisStore = connectRedis(session);
 
 const app = express();
+export default app;
+
 app.use(
 	cors({
 		origin: "http://localhost:3000",
