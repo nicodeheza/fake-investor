@@ -1,6 +1,5 @@
 import chai, {expect} from "chai";
 import {Request, Response} from "express";
-import passport from "passport";
 import sinon, {SinonSpy, SinonStub} from "sinon";
 import sinonChai from "sinon-chai";
 import userChart from "../../../controllers/user/userChart";
