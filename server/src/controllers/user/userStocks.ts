@@ -19,12 +19,16 @@ export default async function userStocks(req: Request, res: Response) {
 			(stocks as {[key: string]: string}[]).map((obj) => obj.symbol)
 		);
 
+		const valsObj = vals.reduce(
+			(acc, curr) => ({...acc, [curr.symbol]: {price: curr.price, change: curr.change}}),
+			{}
+		);
+
 		const result = (stocks as {[key: string]: string}[]).map((obj) => {
 			const fullName = obj.stock_name;
 			const symbol = obj.symbol;
-			const valIndex = vals.findIndex((o) => o.symbol === symbol);
-			const price = vals[valIndex].price;
-			const change = vals[valIndex].change;
+			const price = valsObj[obj.symbol].price;
+			const change = valsObj[obj.symbol].change;
 			const quaNum = parseInt(obj.quantity);
 			const quaMon = quaNum * price;
 			const r: stockData = {
