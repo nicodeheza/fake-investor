@@ -15,6 +15,11 @@ interface user {
 }
 
 describe("/user/singup route", function () {
+	after(async function () {
+		await db.promise().execute(`
+		DELETE FROM Users WHERE user_name= 'newUser'
+		`);
+	});
 	describe("user must have been saved correctly in the db and logged in", function () {
 		let res: ChaiHttp.Response, err: any, newUser: user;
 		before(function (done) {
