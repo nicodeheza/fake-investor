@@ -1,11 +1,8 @@
 import chai, {expect} from "chai";
 import chaiHttp from "chai-http";
-// import sinon, {SinonSpy, SinonStub} from "sinon";
-// import sinonChai from "sinon-chai";
 import db from "../../../db/db";
 import app from "../../../index";
 
-// chai.use(sinonChai);
 chai.use(chaiHttp);
 
 interface user {
