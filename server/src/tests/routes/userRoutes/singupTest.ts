@@ -132,7 +132,7 @@ describe("/user/singup route", function () {
 		});
 		it("new user has not been created", async function () {
 			const [dbData] = await db.promise().execute(`
-			SELECT * FROM Users WHERE user_name= 'newUser2'
+			SELECT * FROM Users WHERE user_name= 'newUser3'
 			`);
 			expect(dbData).to.be.eql([]);
 		});
