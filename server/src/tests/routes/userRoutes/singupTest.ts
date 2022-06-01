@@ -1,11 +1,11 @@
 import chai, {expect} from "chai";
 import chaiHttp from "chai-http";
-import sinon, {SinonSpy, SinonStub} from "sinon";
-import sinonChai from "sinon-chai";
+// import sinon, {SinonSpy, SinonStub} from "sinon";
+// import sinonChai from "sinon-chai";
 import db from "../../../db/db";
 import app from "../../../index";
 
-chai.use(sinonChai);
+// chai.use(sinonChai);
 chai.use(chaiHttp);
 
 interface user {
@@ -19,7 +19,7 @@ interface user {
 
 describe("/user/singup route", function () {
 	describe("user must have been saved correctly in the db and logged in", function () {
-		let res: any, err, newUser: user;
+		let res: ChaiHttp.Response, err: any, newUser: user;
 		before(function (done) {
 			chai
 				.request(app)
@@ -62,17 +62,79 @@ describe("/user/singup route", function () {
 		it("user must be logged in", function () {
 			expect(res).to.have.cookie("connect.sid");
 		});
-		it("status must be 200", function () {});
-		it("user name must be returned", function () {});
+		it("status must be 200", function () {
+			expect(res).to.have.status(200);
+			expect(err).to.be.null;
+		});
+		it("user name must be returned", function () {
+			expect(res).to.be.json;
+			expect(res.body.userName).to.be.equal("newUser");
+		});
 	});
-	describe("singup with invalid password", function () {
-		it("status must be 400", function () {});
-		it("must return correct message", function () {});
-		it("new user has not been created", function () {});
+	describe("singup with invalid email", function () {
+		let res: ChaiHttp.Response, err: any;
+		before(function (done) {
+			chai
+				.request(app)
+				.post("/api/user/singup")
+				.set("Content-Type", "application/json")
+				.send({
+					email: "newUser",
+					userName: "newUser2",
+					password: "newUserPassword2",
+					repeat: "newUserPassword2"
+				})
+				.end(function (e, r) {
+					res = r;
+					err = e;
+					done();
+				});
+		});
+		it("status must be 400", function () {
+			expect(res).to.have.status(400);
+		});
+		it("must return correct message", function () {
+			expect(res.body.message).to.be.equal("Please enter a valid email.");
+		});
+		it("new user has not been created", async function () {
+			const [dbData] = await db.promise().execute(`
+			SELECT * FROM Users WHERE user_name= 'newUser2'
+			`);
+			expect(dbData).to.be.eql([]);
+		});
 	});
 	describe("signup with existing email", function () {
-		it("status must be 400", function () {});
-		it("must return correct message", function () {});
-		it("new user has not been created", function () {});
+		let res: ChaiHttp.Response, err: any, newUser: user;
+		before(function (done) {
+			chai
+				.request(app)
+				.post("/api/user/singup")
+				.set("Content-Type", "application/json")
+				.send({
+					email: "newUser@test.com",
+					userName: "newUser3",
+					password: "newUserPassword",
+					repeat: "newUserPassword"
+				})
+				.end(function (e, r) {
+					res = r;
+					err = e;
+					done();
+				});
+		});
+		it("status must be 400", function () {
+			expect(res).to.have.status(400);
+		});
+		it("must return correct message", function () {
+			expect(res.body.message).to.be.equal(
+				"There is already an account associated with that email"
+			);
+		});
+		it("new user has not been created", async function () {
+			const [dbData] = await db.promise().execute(`
+			SELECT * FROM Users WHERE user_name= 'newUser2'
+			`);
+			expect(dbData).to.be.eql([]);
+		});
 	});
 });
