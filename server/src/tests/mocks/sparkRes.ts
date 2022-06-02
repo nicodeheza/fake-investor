@@ -25,11 +25,11 @@ function createDates(numOfDates: number) {
 	return dates;
 }
 
-export default function sparkRes(symbols: string[]) {
+export default function sparkRes(symbols: string[], random = true) {
 	const res: sparkData = {};
 	symbols.forEach((symbol) => {
 		const timestamp = createDates(365);
-		const close = timestamp.map((e, i) => Math.random() * 200);
+		const close = timestamp.map((e, i) => (random ? Math.random() * 200 : 190));
 		res[symbol] = {
 			previousClose: null,
 			symbol: symbol,
