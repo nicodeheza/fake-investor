@@ -4,6 +4,29 @@ export interface quote {
 	regularMarketChangePercent: number;
 }
 
+export const QUOTE_RES_STATIC = {
+	quoteResponse: {
+		error: null,
+		result: [
+			{
+				symbol: "IBM",
+				regularMarketPrice: 100,
+				regularMarketChangePercent: 1
+			},
+			{
+				symbol: "AAPL",
+				regularMarketPrice: 200,
+				regularMarketChangePercent: 2
+			},
+			{
+				symbol: "GOOG",
+				regularMarketPrice: 300,
+				regularMarketChangePercent: 3
+			}
+		]
+	}
+};
+
 export default function quoteRes(symbols: string[]) {
 	const res: {
 		quoteResponse: {
