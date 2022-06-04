@@ -3,6 +3,7 @@ import {API_URL} from "../../consts";
 import * as d3 from "d3";
 import roundTow from "../../helpers/roundTow";
 import Spinner from "../Spinner";
+import {useNavigate} from "react-router-dom";
 
 interface chart {
 	symbol: string | undefined;
@@ -36,6 +37,8 @@ export default function Chart({symbol}: chart) {
 	const [allData, setAllData] = useState<chartData | undefined>();
 	const [chartLength, setChertLength] = useState(chartL.m1);
 	const svgDiv = useRef<HTMLDivElement>(null!);
+	const navigate = useNavigate();
+
 	//fetch Data
 	useEffect(() => {
 		if (symbol) {
@@ -45,11 +48,12 @@ export default function Chart({symbol}: chart) {
 			})
 				.then((res) => res.json())
 				.then((data) => {
+					if (data.message === "Limit Exceeded") navigate("/error");
 					setAllData(data);
 				})
 				.catch((err) => console.log(err));
 		}
-	}, [symbol]);
+	}, [symbol, navigate]);
 
 	//set data length
 	useEffect(() => {

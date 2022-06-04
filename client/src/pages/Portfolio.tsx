@@ -28,6 +28,8 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log("data: ", data);
+				if (data.message === "Limit Exceeded") navigate("/error");
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");
@@ -45,6 +47,7 @@ export default function Portfolio() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				if (data.message === "Limit Exceeded") navigate("/error");
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");
@@ -52,7 +55,9 @@ export default function Portfolio() {
 				setUserStoks(data);
 				setFilteredStoks(data);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+			});
 	}, [setUserName, navigate]);
 
 	function filterStoks(e: React.ChangeEvent<HTMLInputElement>) {

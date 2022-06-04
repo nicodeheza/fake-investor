@@ -20,6 +20,7 @@ export default async function chart(req: Request, res: Response) {
 				}
 			);
 			resData = await response.json();
+			if (resData.message === "Limit Exceeded") throw resData.message;
 
 			await redisClientCache.setEx(redisKey, 3600, JSON.stringify(resData));
 			console.log("stock chart api");
@@ -40,5 +41,10 @@ export default async function chart(req: Request, res: Response) {
 		res.status(200).json(resObj);
 	} catch (err) {
 		console.log(err);
+		if (err === "Limit Exceeded") {
+			res.status(502).json({message: err});
+		} else {
+			res.status(500).json({message: err});
+		}
 	}
 }

@@ -135,7 +135,7 @@ describe("UserChart controller", function () {
 			expect(statusSpy).to.have.been.calledWith(500);
 		});
 		it("json must be caller with correct arguments", function () {
-			expect(jsonSpy).to.have.been.calledWith("test error");
+			expect(jsonSpy).to.have.been.calledWith({message: "test error"});
 		});
 	});
 });

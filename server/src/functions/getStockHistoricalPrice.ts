@@ -40,6 +40,8 @@ export default async function getStockHistoricalPrice(
 					}
 				);
 				const fetchData = await response.json();
+				if (fetchData.message === "Limit Exceeded") throw fetchData.message;
+
 				console.log("getStockHistoricalPrice api call");
 
 				await Promise.all(
@@ -90,5 +92,6 @@ export default async function getStockHistoricalPrice(
 		return resArr;
 	} catch (err) {
 		console.log(err);
+		throw err;
 	}
 }

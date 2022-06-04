@@ -40,6 +40,7 @@ export default function Stock() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				if (data.message === "Limit Exceeded") navigate("/error");
 				if (data.message === "Nonexistent symbol") {
 					navigate("/search");
 				} else {
@@ -58,6 +59,7 @@ export default function Stock() {
 		})
 			.then((res) => res.json())
 			.then((d) => {
+				if (d.message === "Limit Exceeded") navigate("/error");
 				if (d.userName === "") {
 					setUserName("");
 					navigate("/");

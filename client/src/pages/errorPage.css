@@ -1,0 +1,22 @@
+.errorPage-mainContainer {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background-color: var(--bk-dark);
+	z-index: 10;
+}
+.errorPage-mainContainer h1 {
+	color: var(--red);
+	font-size: clamp(2rem, 7vw, 5rem);
+	margin: 0px;
+	margin-bottom: 10px;
+}
+.errorPage-mainContainer p {
+	text-align: center;
+	font-size: clamp(1rem, 2vw, 1.5rem);
+	margin: 10px;
+}

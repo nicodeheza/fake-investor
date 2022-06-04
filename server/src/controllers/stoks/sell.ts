@@ -31,6 +31,10 @@ export default async function sell(req: Request, res: Response) {
 		res.status(200).json({message: "ok"});
 	} catch (err) {
 		console.log(err);
-		res.status(500).json({message: err});
+		if (err === "Limit Exceeded") {
+			res.status(502).json({message: err});
+		} else {
+			res.status(500).json({message: err});
+		}
 	}
 }

@@ -79,6 +79,7 @@ export default function SellCard({
 			})
 				.then((res) => res.json())
 				.then((data) => {
+					if (data.message === "Limit Exceeded") navigate("/error");
 					if (data.message === "ok") {
 						navigate("/portfolio");
 					} else if (data.userName === "") {

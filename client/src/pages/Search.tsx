@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Spinner from "../components/Spinner";
 import {API_URL} from "../consts";
 import roundTow from "../helpers/roundTow";
@@ -29,6 +29,7 @@ export default function Search() {
 	const [timeOut, setTimeOut] = useState<null | ReturnType<typeof setTimeout>>(null);
 	const [searchResult, setSearchResult] = useState<searchRes | []>([]);
 	const [typing, setTyping] = useState(false);
+	const navigate = useNavigate();
 
 	function searchStock(query: string) {
 		setSearchResult([]);
@@ -50,8 +51,8 @@ export default function Search() {
 					})
 						.then((res) => res.json())
 						.then((data) => {
-							if (!data?.ResultSet?.Result) {
-								setSearchResult([{symbol: "ERROR", name: "Too many calls"}]);
+							if (data.message === "Limit Exceeded") {
+								navigate("/error");
 							} else {
 								setSearchResult(data.ResultSet.Result);
 							}
@@ -68,9 +69,12 @@ export default function Search() {
 		fetch(`${API_URL}/stock/top`)
 			.then((res) => res.json())
 			.then((data) => {
+				console.log(data);
+				if (data.message === "Limit Exceeded") navigate("/error");
 				setTopData(data);
-			});
-	}, []);
+			})
+			.catch((err) => console.log(err));
+	}, [navigate]);
 
 	return (
 		<div className="searchContainer">

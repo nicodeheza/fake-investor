@@ -16,5 +16,10 @@ export default async function buyCard(req: Request, res: Response) {
 		});
 	} catch (err) {
 		console.log(err);
+		if (err === "Limit Exceeded") {
+			res.status(502).json({message: err});
+		} else {
+			res.status(500).json({message: err});
+		}
 	}
 }

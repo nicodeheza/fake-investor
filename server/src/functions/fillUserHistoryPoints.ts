@@ -62,5 +62,6 @@ export default async function fillUserHistoryPoints(
 		return hp;
 	} catch (err) {
 		console.log(err);
+		throw err;
 	}
 }

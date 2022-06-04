@@ -18,12 +18,13 @@ export default async function (userId: number) {
 			}
 		);
 		let portfolioVal: number = 0;
-		stocksPrice.forEach((obj: {symbol: string; price: number}) => {
+		stocksPrice!.forEach((obj: {symbol: string; price: number}) => {
 			portfolioVal += obj.price * porfolio[obj.symbol];
 		});
 
 		return portfolioVal;
 	} catch (err) {
 		console.log(err);
+		throw err;
 	}
 }

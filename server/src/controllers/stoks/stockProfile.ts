@@ -21,6 +21,7 @@ export default async function stockProfile(req: Request, res: Response) {
 				}
 			);
 			const resData = await response.json();
+			if (resData.message === "Limit Exceeded") throw resData.message;
 			data = resData.quoteResponse.result[0];
 			redisClientCache.setEx(redisKey, 3600, JSON.stringify(data));
 			console.log("stockProfile api");
@@ -59,6 +60,10 @@ export default async function stockProfile(req: Request, res: Response) {
 		res.status(200).json(sendData);
 	} catch (err) {
 		console.log(err);
-		res.status(500).json({message: "Nonexistent symbol"});
+		if (err === "Limit Exceeded") {
+			res.status(502).json({message: err});
+		} else {
+			res.status(500).json({message: "Nonexistent symbol"});
+		}
 	}
 }

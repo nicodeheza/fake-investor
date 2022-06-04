@@ -138,7 +138,7 @@ describe("UserStocks controller", function () {
 			expect(statusSpy).to.have.been.calledWith(500);
 		});
 		it("json must be called with error", function () {
-			expect(jsonSpy).to.have.been.calledWith("test error");
+			expect(jsonSpy).to.have.been.calledWith({message: "test error"});
 		});
 	});
 });

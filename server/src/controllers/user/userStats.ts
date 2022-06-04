@@ -14,7 +14,6 @@ export default async function (req: Request, res: Response) {
 		const stocksPer = (stocksMon * 100) / portfolioVal!;
 		const gainMony = portfolioVal! - 1000000;
 		const gainPer = (gainMony * 100) / 1000000;
-
 		res.status(200).json({
 			gainMony,
 			gainPer,
@@ -26,6 +25,10 @@ export default async function (req: Request, res: Response) {
 		});
 	} catch (err) {
 		console.log(err);
-		res.status(500).json(err);
+		if (err === "Limit Exceeded") {
+			res.status(502).json({message: err});
+		} else {
+			res.status(500).json({message: err});
+		}
 	}
 }

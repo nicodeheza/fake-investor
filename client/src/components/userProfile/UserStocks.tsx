@@ -24,6 +24,7 @@ export default function UserStocks() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				if (data.message === "Limit Exceeded") navigate("/error");
 				if (data.userName === "") {
 					setUserName("");
 					navigate("/");
