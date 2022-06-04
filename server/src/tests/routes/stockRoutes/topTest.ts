@@ -30,34 +30,36 @@ const expectRes = {
 		price: 100,
 		variation: 1
 	},
-	"4": {name: "test stock 5(S5)", symbol: "S5", price: 100, variation: 1},
-	"5": {name: "test stock 4(S4)", symbol: "S4", price: 100, variation: 1},
-	"6": {name: "test stock 3(S3)", symbol: "S3", price: 100, variation: 1},
-	"7": {name: "test stock 2(S2)", symbol: "S2", price: 100, variation: 1},
-	"8": {name: "test stock 1(S1)", symbol: "S1", price: 100, variation: 1},
-	"9": {name: "test stock 0(S0)", symbol: "S0", price: 100, variation: 1},
-	"10": {name: "test stock 6(S6)", symbol: "S6", price: 100, variation: 1}
+	"4": {name: "test stock 8(S8)", symbol: "S8", price: 100, variation: 1},
+	"5": {name: "test stock 7(S7)", symbol: "S7", price: 100, variation: 1},
+	"6": {name: "test stock 6(S6)", symbol: "S6", price: 100, variation: 1},
+	"7": {name: "test stock 5(S5)", symbol: "S5", price: 100, variation: 1},
+	"8": {name: "test stock 4(S4)", symbol: "S4", price: 100, variation: 1},
+	"9": {name: "test stock 3(S3)", symbol: "S3", price: 100, variation: 1},
+	"10": {name: "test stock 2(S2)", symbol: "S2", price: 100, variation: 1}
 };
 
 describe("/stock/top route", function () {
 	before(async function () {
+		const newStocksIds: any[] = [];
 		await Promise.all(
-			new Array(10).fill(true).map((e, i) => {
-				db.promise().query(
+			new Array(10).fill(true).map(async (e, i) => {
+				const newStock = await db.promise().query(
 					`
             INSERT INTO Stocks (stock_name, symbol) VALUES (?,?)
             `,
 					[`test stock ${i}`, `S${i}`]
 				);
+				newStocksIds.push((newStock as any[])[0].insertId);
 			})
 		);
 		await Promise.all(
-			new Array(10).fill(true).map((e, i) => {
+			newStocksIds.map((id, i) => {
 				db.promise().query(
 					`
             INSERT INTO Transactions (history_id, stock_id, buy, price, quantity) VALUES (1,?,1,100,?)
             `,
-					[i + 5, (i % 9) + 1]
+					[id, (i % 9) + 1]
 				);
 			})
 		);
