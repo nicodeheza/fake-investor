@@ -53,7 +53,7 @@ describe("/stock/buy route", function () {
 	});
 	after(async function () {
 		fetchStub.restore();
-		// algo no queda igual de la db
+
 		await Promise.all([
 			db.promise().execute(`
 		    DELETE FROM Stocks WHERE symbol='TS'
