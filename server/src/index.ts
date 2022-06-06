@@ -16,7 +16,7 @@ export default app;
 
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: process.env.CLIENT_URL || "http://localhost:3000",
 		credentials: true
 	})
 );
@@ -28,7 +28,11 @@ import MainRoute from "./routes/MainRoute";
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-const redisClient = createClient({legacyMode: true});
+const redisClient = createClient(
+	process.env.NODE_ENV === "production"
+		? {legacyMode: true, url: process.env.REDIS_URL}
+		: {legacyMode: true}
+);
 redisClient.connect().catch(console.error);
 app.use(
 	session({
