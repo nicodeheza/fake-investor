@@ -52,7 +52,6 @@ export async function populateDb(stocks: stocks, userEmail: string) {
 		["testUser", userEmail, hash, salt, startDay]
 	);
 	const userId: number = (userCreated as {[key: string]: any}).insertId;
-	// console.log(userId);
 
 	const histories = [
 		{

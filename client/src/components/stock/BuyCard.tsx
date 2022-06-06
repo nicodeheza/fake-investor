@@ -39,7 +39,6 @@ export default function BuyCard({
 	const {setUserName} = UseUserName();
 
 	useEffect(() => {
-		// if (amount > moneyAvailable / price) setAmount(Math.floor(moneyAvailable / price));
 		const amo = isNaN(amount) ? 0 : amount;
 		setResults({
 			amountPer: roundTow((amo * price * 100) / portfolio),

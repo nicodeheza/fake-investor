@@ -69,7 +69,6 @@ export default function Search() {
 		fetch(`${API_URL}/stock/top`)
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
 				if (data.message === "Limit Exceeded") navigate("/error");
 				setTopData(data);
 			})

@@ -445,7 +445,7 @@ describe("User methods", function () {
 		it("get all transactions from 10 days ago", async function () {
 			const date = new Date(Date.now() - 1000 * 60 * 60 * 24 * 10);
 			let transactions = await User.getTransactionFromDateToNow(1, date);
-			// console.log(transactions);
+
 			expect(transactions).to.have.lengthOf(4);
 			if (transactions) {
 				for (let i = 0; i < transactions.length; i++) {

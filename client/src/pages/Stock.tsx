@@ -210,39 +210,39 @@ export default function Stock() {
 						<div className="stock-b-data">
 							<div className="stock-b-data-item">
 								<p className="stock-b-data-item-l">Previous Close</p>
-								<p className="stock-b-data-item-r">
+								<div className="stock-b-data-item-r">
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 							<div className="stock-b-data-item">
 								<p className="stock-b-data-item-l">Open</p>
-								<p>
+								<div>
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 							<div className="stock-b-data-item">
 								<p>Day's Range</p>
-								<p>
+								<div>
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 							<div className="stock-b-data-item">
 								<p>52 Week Range</p>
-								<p>
+								<div>
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 							<div className="stock-b-data-item">
 								<p>Volume</p>
-								<p>
+								<div>
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 							<div className="stock-b-data-item">
 								<p>Avg. Volume</p>
-								<p>
+								<div>
 									<div className="loading-div" />
-								</p>
+								</div>
 							</div>
 						</div>
 						<div className="stock-b-chart-container">
