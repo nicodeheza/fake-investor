@@ -1,0 +1,27 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const passport_1 = __importDefault(require("passport"));
+const Login_1 = __importDefault(require("../controllers/user/Login"));
+const router = (0, express_1.Router)();
+const Singup_1 = __importDefault(require("../controllers/user/Singup"));
+const logout_1 = __importDefault(require("../controllers/user/logout"));
+const Auth_1 = __importDefault(require("../controllers/user/Auth"));
+const auth_1 = __importDefault(require("../middelwares/auth"));
+const userStats_1 = __importDefault(require("../controllers/user/userStats"));
+const userStocks_1 = __importDefault(require("../controllers/user/userStocks"));
+const userChart_1 = __importDefault(require("../controllers/user/userChart"));
+const resetUser_1 = __importDefault(require("../controllers/user/resetUser"));
+router.post("/singup", Singup_1.default);
+router.post("/login", passport_1.default.authenticate("local"), Login_1.default);
+router.get("/logout", auth_1.default, logout_1.default);
+router.get("/auth", Auth_1.default);
+router.get("/userStats", auth_1.default, userStats_1.default);
+router.get("/stocks", auth_1.default, userStocks_1.default);
+router.get("/userChart", auth_1.default, userChart_1.default);
+router.delete("/reset", auth_1.default, resetUser_1.default);
+const UserRoutes = router;
+exports.default = UserRoutes;

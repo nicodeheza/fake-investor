@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const buyCard_1 = __importDefault(require("../controllers/stoks/buyCard"));
+const chart_1 = __importDefault(require("../controllers/stoks/chart"));
+const router = (0, express_1.Router)();
+const search_1 = __importDefault(require("../controllers/stoks/search"));
+const stockProfile_1 = __importDefault(require("../controllers/stoks/stockProfile"));
+const buy_1 = __importDefault(require("../controllers/stoks/buy"));
+const auth_1 = __importDefault(require("../middelwares/auth"));
+const sell_1 = __importDefault(require("../controllers/stoks/sell"));
+const top_1 = __importDefault(require("../controllers/stoks/top"));
+router.get("/buy-card", auth_1.default, buyCard_1.default);
+router.get("/top", top_1.default);
+router.get("/search/:query", search_1.default);
+router.get("/chart/:symbol", chart_1.default);
+router.get("/:symbol", stockProfile_1.default);
+router.post("/buy", auth_1.default, buy_1.default);
+router.post("/sell", auth_1.default, sell_1.default);
+const StockRoutes = router;
+exports.default = StockRoutes;
