@@ -12,6 +12,16 @@ services:
     restart: unless-stopped
     depends_on:
       - node-app
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email nicolasdeheza@hotmail.com --agree-tos --no-eff-email --staging -d fi.nicolasdeheza.com
   node-app:
     build:
       context: ./server
@@ -34,7 +44,6 @@ services:
       - redis
   mysql:
     image: mysql:8
-    # command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -60,6 +69,8 @@ services:
       - fi-network
 volumes:
   FIdbV:
+  certbot-etc:
+  certbot-var:
   web-root:
     driver: local
     driver_opts:
