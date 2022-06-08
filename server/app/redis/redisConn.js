@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.redisClientCache = void 0;
+require("dotenv/config");
 const redis_1 = require("redis");
-exports.redisClientCache = (0, redis_1.createClient)();
+exports.redisClientCache = (0, redis_1.createClient)(process.env.NODE_ENV === "production" ? { url: process.env.REDIS_URL } : {});
 (() => __awaiter(void 0, void 0, void 0, function* () {
     exports.redisClientCache.on("connect", () => console.log("redis cache connected"));
     exports.redisClientCache.on("error", (err) => console.log(err));

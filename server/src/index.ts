@@ -14,12 +14,14 @@ const RedisStore = connectRedis(session);
 const app = express();
 export default app;
 
-app.use(
-	cors({
-		origin: process.env.CLIENT_URL || "http://localhost:3000",
-		credentials: true
-	})
-);
+if (process.env.NODE_ENV !== "production") {
+	app.use(
+		cors({
+			origin: process.env.CLIENT_URL || "http://localhost:3000",
+			credentials: true
+		})
+	);
+}
 
 createTables();
 

@@ -16,15 +16,19 @@ const passaportConfig_1 = __importDefault(require("./middelwares/passaportConfig
 const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
 const app = (0, express_1.default)();
 exports.default = app;
-app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
-    credentials: true
-}));
+if (process.env.NODE_ENV !== "production") {
+    app.use((0, cors_1.default)({
+        origin: process.env.CLIENT_URL || "http://localhost:3000",
+        credentials: true
+    }));
+}
 (0, tables_1.default)();
 const MainRoute_1 = __importDefault(require("./routes/MainRoute"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-const redisClient = (0, redis_1.createClient)({ legacyMode: true });
+const redisClient = (0, redis_1.createClient)(process.env.NODE_ENV === "production"
+    ? { legacyMode: true, url: process.env.REDIS_URL }
+    : { legacyMode: true });
 redisClient.connect().catch(console.error);
 app.use((0, express_session_1.default)({
     secret: process.env.SECRET || "secret",
