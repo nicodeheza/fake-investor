@@ -5,6 +5,8 @@ services:
     volumes:
       - web-root:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     ports:
       - "80:80"
     networks:
