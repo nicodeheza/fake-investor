@@ -78,7 +78,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/nicolasdeheza/fake-investor/client/build/
+      device: ./client/build/
       o: bind
   dhparam:
     driver: local
