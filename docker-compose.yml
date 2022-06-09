@@ -25,7 +25,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email nicolasdeheza@hotmail.com --agree-tos --no-eff-email --staging -d fi.nicolasdeheza.com
+    command: sudo certonly --webroot --webroot-path=/var/www/html --email nicolasdeheza@hotmail.com --agree-tos --no-eff-email --staging -d fi.nicolasdeheza.com
   node-app:
     build:
       context: ./server
