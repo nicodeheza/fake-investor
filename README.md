@@ -1,8 +1,8 @@
-# Fake Investor
+# Fake Inversor
 
 ## About
 
-Fake Investor is a simple investment simulator where you can see stock stats, buy and sell stocks and follow your progress.
+Fake Inversor is a simple investment simulator where you can see stock stats, buy and sell stocks and follow your progress.
 
 All users start with one million FUD (fake United States Dollar), the fake currency of the application.
 
