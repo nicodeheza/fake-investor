@@ -85,7 +85,7 @@ export default function Search() {
 						className="searchContent-sparck"
 					/>
 					<h1>
-						Stoks <span>Searcher</span>
+						Stock <span>Searcher</span>
 					</h1>
 				</header>
 				<input
